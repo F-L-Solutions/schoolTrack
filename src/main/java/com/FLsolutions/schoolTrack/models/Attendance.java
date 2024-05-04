@@ -1,9 +1,7 @@
 package com.FLsolutions.schoolTrack.models;
 
 import java.time.LocalDate;
-import java.util.List;
 
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -23,9 +21,8 @@ public class Attendance extends Event {
 	@Enumerated(EnumType.STRING)
 	private AttendanceStatus attendanceStatus;
 
-	@ElementCollection
 	@Enumerated(EnumType.STRING)
-	private List<AttendanceDay> attendanceDay;
+	private AttendanceDay attendanceDay;
 
 	private boolean isExcused;
 
@@ -34,7 +31,7 @@ public class Attendance extends Event {
 	}
 
 	public Attendance(LocalDate date, DayType dayType, Kid kid, AttendanceStatus attendanceStatus,
-			List<AttendanceDay> attendanceDay) {
+			AttendanceDay attendanceDay) {
 		super(date, dayType);
 		this.kid = kid;
 		this.attendanceStatus = AttendanceStatus.IDLE;
@@ -58,11 +55,11 @@ public class Attendance extends Event {
 		this.attendanceStatus = attendanceStatus;
 	}
 
-	public List<AttendanceDay> getAttendanceDay() {
+	public AttendanceDay getAttendanceDay() {
 		return attendanceDay;
 	}
 
-	public void setAttendanceDay(List<AttendanceDay> attendanceDay) {
+	public void setAttendanceDay(AttendanceDay attendanceDay) {
 		this.attendanceDay = attendanceDay;
 	}
 
