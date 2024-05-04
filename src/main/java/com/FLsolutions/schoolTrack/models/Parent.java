@@ -9,7 +9,7 @@ import jakarta.persistence.*;
 @Table(name= "parents")
 public class Parent extends User{
 	
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "parent_kid",
         joinColumns = @JoinColumn(name = "parent_id"),
