@@ -8,7 +8,9 @@ import java.util.List;
 public class Kid extends User {
 
 //	private List<Parent> parents;
-//	private List<Reservation> reservations;
+	@OneToMany(mappedBy = "kid", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	private List<Reservation> reservations;
+	
 //	private List<SubstituteCredit> substitutes;
 //	private List<Attendace> attendanceList;
 	private DayType dayType;
@@ -25,9 +27,17 @@ public class Kid extends User {
 	public DayType getDayType() {
 		return dayType;
 	}
+	
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
 
 	public void setDayType(DayType dayType) {
 		this.dayType = dayType;
 	}
+	
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
+    }
 
 }

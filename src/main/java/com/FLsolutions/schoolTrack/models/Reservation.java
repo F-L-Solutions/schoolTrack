@@ -8,9 +8,9 @@ import jakarta.persistence.*;
 @Table (name= "reservations")
 public class Reservation extends Event{
 	
- /*   @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "kid_id")
-    private Kid kid; */
+    private Kid kid; 
 	
 	@Enumerated (EnumType.STRING)
 	private ReservationStatus status;
@@ -20,23 +20,23 @@ public class Reservation extends Event{
 		this.status = ReservationStatus.WAITING;
 	}
 	
-    public Reservation(LocalDate date, DayType dayType) { //when Kid class is created, add Kid kidSysId
+    public Reservation(LocalDate date, DayType dayType, Kid kid) { 
         super(date, dayType); 
-        //this.kidSysId = kidSysId;
+        this.kid = kid;
         this.status = ReservationStatus.WAITING;
     }
 	
-  /*  public Kid getKid() {
+    public Kid getKid() {
         return kid;
-    } */
+    } 
 	
 	public ReservationStatus getStatus() {
 		return status;
 	}
 
-  /*  public void setKid(Kid kid) {
+    public void setKid(Kid kid) {
         this.kid = kid;
-    } */
+    } 
 
     public void setStatus(ReservationStatus status) {
         this.status = status;
