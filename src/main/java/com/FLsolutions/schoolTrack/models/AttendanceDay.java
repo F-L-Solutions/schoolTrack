@@ -1,11 +1,11 @@
 package com.FLsolutions.schoolTrack.models;
 
-public enum AttendanceStatus {
-	ATTENDED("attended"), ABSENT("absent");
+public enum AttendanceDay {
+	MON("Monday"), TUE("Tuesday"), WED("Wednesday"), THU("Thursday"), FRI("Friday");
 
 	private String name;
 
-	AttendanceStatus(String name) {
+	AttendanceDay(String name) {
 		this.name = name;
 	}
 
