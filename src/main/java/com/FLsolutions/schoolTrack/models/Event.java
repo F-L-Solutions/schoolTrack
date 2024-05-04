@@ -39,6 +39,11 @@ public class Event {
 		this.dayType = dayType;
 	}
 
+	public Event(LocalDate date, DayType dayType) {
+		this.date = date;
+		this.dayType = dayType;
+	}
+
 	public Enum<DayType> getDayType() {
 		return dayType;
 	}
