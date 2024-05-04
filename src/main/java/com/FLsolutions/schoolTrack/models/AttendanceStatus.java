@@ -1,7 +1,9 @@
 package com.FLsolutions.schoolTrack.models;
 
 public enum AttendanceStatus {
-	ATTENDED("attended"), ABSENT("absent");
+	IDLE("idle"), //before the day of attendance
+	ATTENDED("attended"), //after the day of attendance if attended
+	ABSENT("absent"); //after the day of attendance if not attended
 
 	private String name;
 

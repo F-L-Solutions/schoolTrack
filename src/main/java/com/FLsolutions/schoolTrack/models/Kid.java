@@ -12,7 +12,10 @@ public class Kid extends User {
 	private List<Reservation> reservations;
 	
 //	private List<SubstituteCredit> substitutes;
-//	private List<Attendace> attendanceList;
+	
+	@OneToMany(mappedBy = "kid", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	private List<Attendance> attendanceList;
+	
 	private DayType dayType;
 
 	public Kid() {
