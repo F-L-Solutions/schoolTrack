@@ -13,7 +13,8 @@ public class Kid extends User {
 	@OneToMany(mappedBy = "kid", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private List<Reservation> reservations;
 	
-//	private List<SubstituteCredit> substitutes;
+	@OneToMany(mappedBy = "kid", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	private List<SubstituteCredit> substitutes;
 	
 	@OneToMany(mappedBy = "kid", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private List<Attendance> attendanceList;
