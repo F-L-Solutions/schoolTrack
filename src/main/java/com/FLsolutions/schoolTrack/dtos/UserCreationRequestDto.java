@@ -7,6 +7,13 @@ public class UserCreationRequestDto implements RequestDto{
 	public final String telNumber;
 	public final String email;
 	
+	public UserCreationRequestDto() {
+		this.firstName = "";
+		this.lastName = "";
+		this.telNumber = "";
+		this.email = "";
+	}
+	
     public UserCreationRequestDto(String firstName, String lastName, String email, String telNumber) {
         this.firstName = firstName;
         this.lastName = lastName;
