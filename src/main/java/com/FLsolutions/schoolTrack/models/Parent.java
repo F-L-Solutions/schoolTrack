@@ -4,21 +4,21 @@ import java.util.List;
 
 import jakarta.persistence.*;
 
-
 @Entity
-@Table(name= "parents")
-public class Parent extends User{
-	
-	@ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "parent_kid",
-        joinColumns = @JoinColumn(name = "parent_id"),
-        inverseJoinColumns = @JoinColumn(name = "kid_id")
-    )
-    private List<Kid> kids;
+@Table(name = "parents")
+public class Parent extends User {
 
-	public Parent() {}
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "parent_kid", joinColumns = @JoinColumn(name = "parent_id"), inverseJoinColumns = @JoinColumn(name = "kid_id"))
+	private List<Kid> kids;
+
+	public Parent() {
+	}
 	
+	public Parent(String firstName, String lastName, String email, String telNumber) {
+		super(firstName, lastName, email, telNumber);
+	}
+
 	public Parent(List<Kid> kids) {
 		super();
 		this.kids = kids;
@@ -31,5 +31,5 @@ public class Parent extends User{
 	public void setKids(List<Kid> kids) {
 		this.kids = kids;
 	}
-	
+
 }
