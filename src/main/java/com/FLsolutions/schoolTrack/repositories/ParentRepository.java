@@ -6,6 +6,10 @@ import org.springframework.stereotype.Repository;
 import com.FLsolutions.schoolTrack.models.Parent;
 
 @Repository
-public interface ParentRepository extends JpaRepository<Parent, Long>{
+public interface ParentRepository extends JpaRepository<Parent, Long> {
+
+	Parent findByEmail(String email);
+
+	Parent findByUserName(String userName);
 
 }

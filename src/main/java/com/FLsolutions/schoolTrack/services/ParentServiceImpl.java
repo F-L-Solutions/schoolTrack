@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service;
 
 import com.FLsolutions.schoolTrack.dtos.ParentCreationRequestDto;
 import com.FLsolutions.schoolTrack.dtos.StatusResponseDto;
+import com.FLsolutions.schoolTrack.exceptions.DuplicateEmailException;
+import com.FLsolutions.schoolTrack.exceptions.DuplicateUserNameException;
 import com.FLsolutions.schoolTrack.exceptions.MissingRequestBodyException;
 import com.FLsolutions.schoolTrack.models.Parent;
 import com.FLsolutions.schoolTrack.repositories.ParentRepository;
@@ -18,14 +20,22 @@ public class ParentServiceImpl implements ParentService {
 	}
 
 	public StatusResponseDto createParent(ParentCreationRequestDto requestDto) {
-		if (requestDto.firstName == null || requestDto.lastName == null || requestDto.email == null
-				|| requestDto.telNumber == null) {
-			throw new MissingRequestBodyException();
+		StatusResponseDto responseDto = new StatusResponseDto("");
+		String username = requestDto.getFirstName() + requestDto.getLastName();
+
+		if (parentRepository.findByEmail(requestDto.getEmail()) != null) {
+			throw new DuplicateEmailException("Email already exists");
 		}
 
-		Parent parent = new Parent(requestDto.firstName, requestDto.lastName, requestDto.email, requestDto.telNumber);
-		parentRepository.save(parent);
-		return new StatusResponseDto("Parent was created");
-	}
+		if (parentRepository.findByUserName(username) != null) {
+			throw new DuplicateUserNameException("Username already exists");
+		}
 
+		Parent parent = new Parent(requestDto.getFirstName(), requestDto.getLastName(), requestDto.getTelNumber(),
+				requestDto.getEmail());
+		parentRepository.save(parent);
+		responseDto.setStatus("Parent was created");
+
+		return responseDto;
+	}
 }
