@@ -1,8 +1,15 @@
 package com.FLsolutions.schoolTrack.exceptions;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.*;
+
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.FLsolutions.schoolTrack.dtos.ErrorResponseDto;
@@ -14,8 +21,56 @@ public class ControllerExceptionHandler {
 	}
 
 	@ExceptionHandler(MissingRequestBodyException.class)
-	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
-	public ErrorResponseDto emptyRequestBody() {
-		return new ErrorResponseDto("Part of request body is missing");
+	public ResponseEntity<ErrorResponseDto> handleMissingRequestBodyException(MissingRequestBodyException ex) {
+		List<String> details = new ArrayList<>();
+		details.add(ex.getMessage());
+		
+		ErrorResponseDto errorResponse = new ErrorResponseDto("Validation Failed", details,
+				HttpStatus.CONFLICT.value());
+		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(HttpMessageNotReadableException.class)
+	public ResponseEntity<ErrorResponseDto> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
+		List<String> details = new ArrayList<>();
+		details.add("Required request body is missing or unreadable");
+
+		ErrorResponseDto errorResponse = new ErrorResponseDto("Invalid Request", details,
+				HttpStatus.BAD_REQUEST.value());
+
+		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(DuplicateEmailException.class)
+	public ResponseEntity<ErrorResponseDto> handleDuplicateEmailException(DuplicateEmailException ex) {
+		List<String> details = new ArrayList<>();
+		details.add(ex.getMessage());
+		
+		ErrorResponseDto errorResponse = new ErrorResponseDto("Validation Failed", details,
+				HttpStatus.CONFLICT.value());
+		return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+	}
+
+	@ExceptionHandler(DuplicateUserNameException.class)
+	public ResponseEntity<ErrorResponseDto> handleDuplicateUserNameException(DuplicateUserNameException ex) {
+		List<String> details = new ArrayList<>();
+		details.add(ex.getMessage());
+		
+		ErrorResponseDto errorResponse = new ErrorResponseDto("Validation Failed", details,
+				HttpStatus.CONFLICT.value());
+		return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+	}
+
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<ErrorResponseDto> handleValidationException(MethodArgumentNotValidException ex) {
+		List<String> details = ex.getBindingResult().getAllErrors().stream()
+				.map(error -> ((FieldError) error).getField() + ": " + error.getDefaultMessage())
+				.collect(Collectors.toList());
+		System.out.println(details);
+
+		ErrorResponseDto errorResponse = new ErrorResponseDto("Validation Failed", details,
+				HttpStatus.BAD_REQUEST.value());
+
+		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 	}
 }
