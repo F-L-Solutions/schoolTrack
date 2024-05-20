@@ -30,7 +30,7 @@ public class ControllerExceptionHandler {
 		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 	}
 
-	@ExceptionHandler(HttpMessageNotReadableException.class)
+/*	@ExceptionHandler(HttpMessageNotReadableException.class)
 	public ResponseEntity<ErrorResponseDto> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
 		List<String> details = new ArrayList<>();
 		details.add("Required request body is missing or unreadable");
@@ -39,7 +39,7 @@ public class ControllerExceptionHandler {
 				HttpStatus.BAD_REQUEST.value());
 
 		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-	}
+	}*/
 
 	@ExceptionHandler(DuplicateEmailException.class)
 	public ResponseEntity<ErrorResponseDto> handleDuplicateEmailException(DuplicateEmailException ex) {
