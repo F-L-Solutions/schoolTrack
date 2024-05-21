@@ -1,21 +1,25 @@
 package com.FLsolutions.schoolTrack.dtos;
 
+import java.time.LocalDate;
+
 import com.FLsolutions.schoolTrack.models.DayType;
 
 public class EventCreationRequestDto {
 
 	private int availableSpots;
 	private DayType dayType;
-	private int numberOfEvents;
+	private LocalDate startDate;
+	private LocalDate endDate;
 	
 	public EventCreationRequestDto() {
 		
 	}
 
-	public EventCreationRequestDto(int availableSpots, DayType dayType, int numberOfEvents) {
+	public EventCreationRequestDto(int availableSpots, DayType dayType, int numberOfEvents, LocalDate startDate, LocalDate endDate) {
 		this.availableSpots = availableSpots;
 		this.dayType = dayType;
-		this.numberOfEvents = numberOfEvents;
+		this.startDate= startDate;
+		this.endDate= endDate;
 	}
 
 	public int getAvailableSpots() {
@@ -34,11 +38,19 @@ public class EventCreationRequestDto {
 		this.dayType = dayType;
 	}
 
-	public int getNumberOfEvents() {
-		return numberOfEvents;
+	public LocalDate getStartDate() {
+		return startDate;
 	}
 
-	public void setNumberOfEvents(int numberOfEvents) {
-		this.numberOfEvents = numberOfEvents;
+	public void setStartDate(LocalDate startDate) {
+		this.startDate = startDate;
+	}
+
+	public LocalDate getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(LocalDate endDate) {
+		this.endDate = endDate;
 	}
 }

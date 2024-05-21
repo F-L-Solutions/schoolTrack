@@ -24,23 +24,20 @@ public class EventServiceImpl implements EventService {
 	public StatusResponseDto bulkCreateEvents(EventCreationRequestDto request) {
 		StatusResponseDto responseDto = new StatusResponseDto("");
 		List<Event> events = new ArrayList<>();
-        LocalDate currentDate = LocalDate.now();
+        LocalDate currentDate = request.getStartDate();
+        LocalDate generationEndDate = request.getEndDate();
         
-        for (int i = 0; i < request.getNumberOfEvents(); i++) {
-            // Skip weekends
-            while (currentDate.getDayOfWeek() == DayOfWeek.SATURDAY || currentDate.getDayOfWeek() == DayOfWeek.SUNDAY) {
-                currentDate = currentDate.plusDays(1);
-            }
-
-            Event event = new Event(currentDate, request.getAvailableSpots(), request.getDayType());
-            events.add(event);
-            currentDate = currentDate.plusDays(1);
+        while(!currentDate.isAfter(generationEndDate)) {
+        	if(currentDate.getDayOfWeek() != DayOfWeek.SATURDAY && currentDate.getDayOfWeek() != DayOfWeek.SUNDAY) {
+                Event event = new Event(currentDate, request.getAvailableSpots(), request.getDayType());
+                events.add(event);
+        	}
+        	currentDate = currentDate.plusDays(1);
         }
-
-        eventRepository.saveAll(events);
-        String lastDay = currentDate.toString();
         
-        responseDto.setStatus(request.getNumberOfEvents() + " number of days were created. The last created event is at " + lastDay);
+        eventRepository.saveAll(events);
+        
+        responseDto.setStatus(events.size() + " number of days were created. The last created event is at " + generationEndDate.toString());
         
         return responseDto;
 	}
