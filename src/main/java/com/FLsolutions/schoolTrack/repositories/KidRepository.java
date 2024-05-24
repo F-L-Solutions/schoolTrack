@@ -10,4 +10,6 @@ public interface KidRepository extends JpaRepository<Kid, Long> {
 	
 	List<Kid> findAll();
 	
+	Kid getByUserName(String userName);
+	
 }
