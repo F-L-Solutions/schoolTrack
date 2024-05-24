@@ -5,8 +5,7 @@ import org.springframework.stereotype.Service;
 import com.FLsolutions.schoolTrack.dtos.ParentCreationRequestDto;
 import com.FLsolutions.schoolTrack.dtos.StatusResponseDto;
 import com.FLsolutions.schoolTrack.exceptions.DuplicateEmailException;
-import com.FLsolutions.schoolTrack.exceptions.DuplicateUserNameException;
-import com.FLsolutions.schoolTrack.exceptions.MissingRequestBodyException;
+import com.FLsolutions.schoolTrack.exceptions.GenericUserException;
 import com.FLsolutions.schoolTrack.models.Parent;
 import com.FLsolutions.schoolTrack.repositories.ParentRepository;
 
@@ -28,7 +27,7 @@ public class ParentServiceImpl implements ParentService {
 		}
 
 		if (parentRepository.findByUserName(username) != null) {
-			throw new DuplicateUserNameException("Username already exists");
+			throw new GenericUserException("Username already exists");
 		}
 
 		Parent parent = new Parent(requestDto.getFirstName(), requestDto.getLastName(), requestDto.getTelNumber(),

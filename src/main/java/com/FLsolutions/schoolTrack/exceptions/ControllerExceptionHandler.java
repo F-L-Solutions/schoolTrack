@@ -30,8 +30,8 @@ public class ControllerExceptionHandler {
 		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 	}
 
-	@ExceptionHandler(DuplicateEmailException.class)
-	public ResponseEntity<ErrorResponseDto> handleDuplicateEmailException(DuplicateEmailException ex) {
+	@ExceptionHandler(GenericUserException.class)
+	public ResponseEntity<ErrorResponseDto> handleGenericUserException(GenericUserException ex) {
 		List<String> details = new ArrayList<>();
 		details.add(ex.getMessage());
 		
@@ -39,26 +39,6 @@ public class ControllerExceptionHandler {
 				HttpStatus.CONFLICT.value());
 		return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
 	}
-
-	@ExceptionHandler(DuplicateUserNameException.class)
-	public ResponseEntity<ErrorResponseDto> handleDuplicateUserNameException(DuplicateUserNameException ex) {
-		List<String> details = new ArrayList<>();
-		details.add(ex.getMessage());
-		
-		ErrorResponseDto errorResponse = new ErrorResponseDto("Validation Failed", details,
-				HttpStatus.CONFLICT.value());
-		return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
-	}
-	
-	/*@ExceptionHandler(DuplicateEventException.class)
-	public ResponseEntity<ErrorResponseDto> handleDuplicateEventException(DuplicateEventException ex) {
-		List<String> details = new ArrayList<>();
-		details.add(ex.getMessage());
-		
-		ErrorResponseDto errorResponse = new ErrorResponseDto("Validation Failed", details,
-				HttpStatus.CONFLICT.value());
-		return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
-	}*/
 	
 	@ExceptionHandler(GenericEventException.class)
 	public ResponseEntity<ErrorResponseDto> handleGenericEventException(GenericEventException ex) {
