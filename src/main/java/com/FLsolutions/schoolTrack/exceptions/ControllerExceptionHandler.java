@@ -57,9 +57,21 @@ public class ControllerExceptionHandler {
 				.collect(Collectors.toList());
 		System.out.println(details);
 
-		ErrorResponseDto errorResponse = new ErrorResponseDto("Validation Failed", details,
+		ErrorResponseDto errorResponse = new ErrorResponseDto("Validation Failed, MethodArgumentNotValidException", details,
 				HttpStatus.BAD_REQUEST.value());
 
 		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 	}
+	
+	@ExceptionHandler(HttpMessageNotReadableException.class)
+	public ResponseEntity<ErrorResponseDto> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
+		List<String> details = new ArrayList<>();
+		details.add(ex.getMessage());
+		
+		ErrorResponseDto errorResponse = new ErrorResponseDto("Validation Failed, HttpMessageNotReadableException", details,
+				HttpStatus.CONFLICT.value());
+		return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+	}
+	
+	
 }
