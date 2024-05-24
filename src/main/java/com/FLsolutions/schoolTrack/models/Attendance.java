@@ -34,8 +34,23 @@ public class Attendance extends Event {
 			AttendanceDay attendanceDay) {
 		super(date, dayType);
 		this.kid = kid;
+		this.attendanceStatus = attendanceStatus;
+		this.attendanceDay = attendanceDay;
+		this.isExcused = false;
+	}
+	
+	public Attendance(LocalDate date, DayType dayType, Kid kid, AttendanceDay attendanceDay) {
+		super(date, dayType);
+		this.kid = kid;
 		this.attendanceStatus = AttendanceStatus.IDLE;
 		this.attendanceDay = attendanceDay;
+		this.isExcused = false;
+	}
+	
+	public Attendance(LocalDate date, DayType dayType, Kid kid) {
+		super(date, dayType);
+		this.kid = kid;
+		this.attendanceStatus = AttendanceStatus.IDLE;
 		this.isExcused = false;
 	}
 
