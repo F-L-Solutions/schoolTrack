@@ -30,17 +30,6 @@ public class ControllerExceptionHandler {
 		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 	}
 
-/*	@ExceptionHandler(HttpMessageNotReadableException.class)
-	public ResponseEntity<ErrorResponseDto> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
-		List<String> details = new ArrayList<>();
-		details.add("Required request body is missing or unreadable");
-
-		ErrorResponseDto errorResponse = new ErrorResponseDto("Invalid Request", details,
-				HttpStatus.BAD_REQUEST.value());
-
-		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-	}*/
-
 	@ExceptionHandler(DuplicateEmailException.class)
 	public ResponseEntity<ErrorResponseDto> handleDuplicateEmailException(DuplicateEmailException ex) {
 		List<String> details = new ArrayList<>();
@@ -53,6 +42,26 @@ public class ControllerExceptionHandler {
 
 	@ExceptionHandler(DuplicateUserNameException.class)
 	public ResponseEntity<ErrorResponseDto> handleDuplicateUserNameException(DuplicateUserNameException ex) {
+		List<String> details = new ArrayList<>();
+		details.add(ex.getMessage());
+		
+		ErrorResponseDto errorResponse = new ErrorResponseDto("Validation Failed", details,
+				HttpStatus.CONFLICT.value());
+		return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+	}
+	
+	/*@ExceptionHandler(DuplicateEventException.class)
+	public ResponseEntity<ErrorResponseDto> handleDuplicateEventException(DuplicateEventException ex) {
+		List<String> details = new ArrayList<>();
+		details.add(ex.getMessage());
+		
+		ErrorResponseDto errorResponse = new ErrorResponseDto("Validation Failed", details,
+				HttpStatus.CONFLICT.value());
+		return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+	}*/
+	
+	@ExceptionHandler(GenericEventException.class)
+	public ResponseEntity<ErrorResponseDto> handleGenericEventException(GenericEventException ex) {
 		List<String> details = new ArrayList<>();
 		details.add(ex.getMessage());
 		
