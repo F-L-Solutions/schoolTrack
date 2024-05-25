@@ -1,6 +1,7 @@
 package com.FLsolutions.schoolTrack.dtos;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import com.FLsolutions.schoolTrack.models.AttendanceDay;
 import com.FLsolutions.schoolTrack.models.AttendanceStatus;
@@ -15,20 +16,20 @@ public class AttendanceCreationRequestDto {
 	private DayType dayType;
 	private String kidUserName;
 	private AttendanceStatus status;
-	private AttendanceDay attendanceDay;
+	private List<AttendanceDay> attendanceDays;
 
 	public AttendanceCreationRequestDto() {
 	}
 
 	// for bulk creation, e.g. every Thursdays the same attendance
 	public AttendanceCreationRequestDto(LocalDate startDate, LocalDate endDate, DayType dayType, String kidUserName,
-			AttendanceDay attendanceDay) {
+			List<AttendanceDay> attendanceDays) {
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.dayType = dayType;
 		this.kidUserName = kidUserName;
 		this.status = AttendanceStatus.IDLE;
-		this.attendanceDay = attendanceDay;
+		this.attendanceDays = attendanceDays;
 	}
 
 	// for singular attendance creation
@@ -87,11 +88,12 @@ public class AttendanceCreationRequestDto {
 		this.status = status;
 	}
 
-	public AttendanceDay getAttendanceDay() {
-		return attendanceDay;
+	public List<AttendanceDay> getAttendanceDays() {
+		return attendanceDays;
 	}
 
-	public void setAttendanceDay(AttendanceDay attendanceDay) {
-		this.attendanceDay = attendanceDay;
+	public void setAttendanceDays(List<AttendanceDay> attendanceDays) {
+		this.attendanceDays = attendanceDays;
 	}
+
 }
