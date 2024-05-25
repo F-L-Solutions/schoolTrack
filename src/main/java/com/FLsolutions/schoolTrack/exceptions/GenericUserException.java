@@ -1,7 +1,17 @@
 package com.FLsolutions.schoolTrack.exceptions;
 
+import org.springframework.http.HttpStatus;
+
 public class GenericUserException extends RuntimeException {
-    public GenericUserException(String message) {
+	
+	private final HttpStatus status;
+	
+    public GenericUserException(String message, HttpStatus status) {
         super(message);
+        this.status= status;
     }
+
+	public HttpStatus getStatus() {
+		return status;
+	}
 }

@@ -1,5 +1,6 @@
 package com.FLsolutions.schoolTrack.services;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.FLsolutions.schoolTrack.dtos.ParentCreationRequestDto;
@@ -23,11 +24,11 @@ public class ParentServiceImpl implements ParentService {
 		String username = requestDto.getFirstName() + requestDto.getLastName();
 
 		if (parentRepository.findByEmail(requestDto.getEmail()) != null) {
-			throw new DuplicateEmailException("Email already exists");
+			throw new DuplicateEmailException("Email already exists", HttpStatus.CONFLICT);
 		}
 
 		if (parentRepository.findByUserName(username) != null) {
-			throw new GenericUserException("Username already exists");
+			throw new GenericUserException("Username already exists", HttpStatus.CONFLICT);
 		}
 
 		Parent parent = new Parent(requestDto.getFirstName(), requestDto.getLastName(), requestDto.getTelNumber(),
