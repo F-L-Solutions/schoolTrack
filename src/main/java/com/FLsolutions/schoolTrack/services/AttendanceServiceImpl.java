@@ -4,13 +4,16 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.FLsolutions.schoolTrack.dtos.AttendanceCreationRequestDto;
 import com.FLsolutions.schoolTrack.dtos.StatusResponseDto;
+import com.FLsolutions.schoolTrack.exceptions.KidNotFoundException;
 import com.FLsolutions.schoolTrack.models.Attendance;
 import com.FLsolutions.schoolTrack.models.AttendanceStatus;
 import com.FLsolutions.schoolTrack.models.DayType;
@@ -26,17 +29,19 @@ public class AttendanceServiceImpl implements AttendanceService {
 
 	public AttendanceServiceImpl(AttendanceRepository attendanceRepository, KidRepository kidRepository) {
 		this.attendanceRepository = attendanceRepository;
-		this.kidRepository=kidRepository;
+		this.kidRepository = kidRepository;
 	}
 
 	public StatusResponseDto createAttendance(AttendanceCreationRequestDto request) {
 		StatusResponseDto response = new StatusResponseDto("");
-		
-		Kid kid = kidRepository.getByUserName(request.getKidUserName());
 
+		Kid kid = kidRepository.findByUserName(request.getKidUserName())
+				.orElseThrow(() -> new KidNotFoundException("Selected kid username was not found in the database",
+						HttpStatus.NOT_FOUND));
 		Attendance attendance = new Attendance(request.getDate(), request.getDayType(), kid);
 		attendanceRepository.save(attendance);
 		response.setStatus("Attendance for " + request.getKidUserName() + " was created.");
+
 		return response;
 	}
 
