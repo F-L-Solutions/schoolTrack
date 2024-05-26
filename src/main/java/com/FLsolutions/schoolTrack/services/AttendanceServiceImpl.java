@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 import com.FLsolutions.schoolTrack.dtos.AttendanceCreationRequestDto;
 import com.FLsolutions.schoolTrack.dtos.StatusResponseDto;
+import com.FLsolutions.schoolTrack.exceptions.DuplicateAttendanceException;
+import com.FLsolutions.schoolTrack.exceptions.GenericEventException;
 import com.FLsolutions.schoolTrack.exceptions.KidNotFoundException;
 import com.FLsolutions.schoolTrack.models.Attendance;
 import com.FLsolutions.schoolTrack.models.AttendanceStatus;
@@ -38,6 +40,15 @@ public class AttendanceServiceImpl implements AttendanceService {
 		Kid kid = kidRepository.findByUserName(request.getKidUserName())
 				.orElseThrow(() -> new KidNotFoundException("Selected kid username was not found in the database",
 						HttpStatus.NOT_FOUND));
+
+		Optional<Attendance> existingAttendance = attendanceRepository.findByKidIdAndDate(kid.getSysId(),
+				request.getDate());
+
+		if (existingAttendance.isPresent()) {
+			throw new DuplicateAttendanceException("Selected kid already has attendance for this day",
+					HttpStatus.CONFLICT);
+		}
+
 		Attendance attendance = new Attendance(request.getDate(), request.getDayType(), kid);
 		attendanceRepository.save(attendance);
 		response.setStatus("Attendance for " + request.getKidUserName() + " was created.");
