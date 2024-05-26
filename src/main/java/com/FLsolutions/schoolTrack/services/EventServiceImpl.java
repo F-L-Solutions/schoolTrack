@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -35,7 +36,7 @@ public class EventServiceImpl implements EventService {
 		List<LocalDate> conflictingDates = checkExistingEvents(generationStartDate, generationEndDate);
 
 		if (!conflictingDates.isEmpty()) {
-			throw new DuplicateEventException(conflictingDates);
+			throw new DuplicateEventException(conflictingDates, HttpStatus.CONFLICT);
 		} else {
 			while (!currentDate.isAfter(generationEndDate)) {
 				if (currentDate.getDayOfWeek() != DayOfWeek.SATURDAY
@@ -62,7 +63,7 @@ public class EventServiceImpl implements EventService {
 		List<LocalDate> conflictingDates = new ArrayList<>();
 
 		if (generationStartDate.isAfter(generationEndDate)) {
-			throw new GenericEventException("0 number of days were created. Start date cannot be after end date");
+			throw new GenericEventException("0 number of days were created. Start date cannot be after end date", HttpStatus.BAD_REQUEST);
 		} else {
 			while (!currentDate.isAfter(generationEndDate)) {
 				if (currentDate.getDayOfWeek() != DayOfWeek.SATURDAY

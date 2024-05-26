@@ -46,8 +46,8 @@ public class ControllerExceptionHandler {
 		details.add(ex.getMessage());
 		
 		ErrorResponseDto errorResponse = new ErrorResponseDto("Validation Failed", details,
-				HttpStatus.CONFLICT.value());
-		return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+				ex.getStatus().value());
+		return new ResponseEntity<>(errorResponse, ex.getStatus());
 	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
@@ -72,6 +72,4 @@ public class ControllerExceptionHandler {
 				HttpStatus.CONFLICT.value());
 		return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
 	}
-	
-	
 }
