@@ -19,8 +19,10 @@ import com.FLsolutions.schoolTrack.exceptions.KidNotFoundException;
 import com.FLsolutions.schoolTrack.models.Attendance;
 import com.FLsolutions.schoolTrack.models.AttendanceStatus;
 import com.FLsolutions.schoolTrack.models.DayType;
+import com.FLsolutions.schoolTrack.models.Event;
 import com.FLsolutions.schoolTrack.models.Kid;
 import com.FLsolutions.schoolTrack.repositories.AttendanceRepository;
+import com.FLsolutions.schoolTrack.repositories.EventRepository;
 import com.FLsolutions.schoolTrack.repositories.KidRepository;
 
 @Service
@@ -28,10 +30,13 @@ public class AttendanceServiceImpl implements AttendanceService {
 
 	private AttendanceRepository attendanceRepository;
 	private KidRepository kidRepository;
+	private EventRepository eventRepository;
 
-	public AttendanceServiceImpl(AttendanceRepository attendanceRepository, KidRepository kidRepository) {
+	public AttendanceServiceImpl(AttendanceRepository attendanceRepository, KidRepository kidRepository,
+			EventRepository eventRepository) {
 		this.attendanceRepository = attendanceRepository;
 		this.kidRepository = kidRepository;
+		this.eventRepository = eventRepository;
 	}
 
 	public StatusResponseDto createAttendance(AttendanceCreationRequestDto request) {
@@ -49,6 +54,20 @@ public class AttendanceServiceImpl implements AttendanceService {
 					HttpStatus.CONFLICT);
 		}
 
+		Event existingEvent = eventRepository.findByDate(request.getDate()).orElseThrow(
+				() -> new GenericEventException("For selected date there was no event found in database", HttpStatus.NOT_FOUND));
+
+		if (existingEvent.getAvailableSpots() == 0) {
+			throw new GenericEventException("For selected date there are no more spots available",
+					HttpStatus.BAD_REQUEST);
+		}
+
+		// decrease available spots in event by 1
+		int newlyAvailableSpots = existingEvent.getAvailableSpots() - 1;
+		existingEvent.setAvailableSpots(newlyAvailableSpots);
+		eventRepository.save(existingEvent);
+
+		// save new attendance
 		Attendance attendance = new Attendance(request.getDate(), request.getDayType(), kid);
 		attendanceRepository.save(attendance);
 		response.setStatus("Attendance for " + request.getKidUserName() + " was created.");
@@ -60,22 +79,5 @@ public class AttendanceServiceImpl implements AttendanceService {
 		StatusResponseDto response = new StatusResponseDto("");
 		return response;
 	}
-
-	/*
-	 * private List<LocalDate> checkKidsExistingAttendance(LocalDate date, Kid kid)
-	 * { LocalDate currentDate = generationStartDate; List<Event> existingEvents =
-	 * eventRepository.findAllByDateBetween(generationStartDate, generationEndDate);
-	 * Set<LocalDate> existingDates =
-	 * existingEvents.stream().map(Event::getDate).collect(Collectors.toSet());
-	 * List<LocalDate> conflictingDates = new ArrayList<>();
-	 * 
-	 * if (generationStartDate.isAfter(generationEndDate)) { throw new
-	 * GenericEventException("0 number of days were created. Start date cannot be after end date"
-	 * ); } else { while (!currentDate.isAfter(generationEndDate)) { if
-	 * (currentDate.getDayOfWeek() != DayOfWeek.SATURDAY &&
-	 * currentDate.getDayOfWeek() != DayOfWeek.SUNDAY) { if
-	 * (existingDates.contains(currentDate)) { conflictingDates.add(currentDate); }
-	 * } currentDate = currentDate.plusDays(1); } } return conflictingDates; }
-	 */
 
 }
