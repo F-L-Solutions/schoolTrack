@@ -13,6 +13,6 @@ import com.FLsolutions.schoolTrack.models.Attendance;
 @Repository
 public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
 
-	@Query("SELECT a FROM Attendance a WHERE a.kid.sysId = :kidId and a.date = :date")
+	@Query("SELECT a FROM Attendance a WHERE a.kid.sysId = :kidId AND a.date = :date AND TYPE(a) = Attendance")
 	Optional<Attendance> findByKidIdAndDate(@Param("kidId") Long kidId, @Param("date") LocalDate date);
 }

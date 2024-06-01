@@ -13,7 +13,7 @@ import com.FLsolutions.schoolTrack.models.Reservation;
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
-	@Query("SELECT r FROM Reservation r WHERE r.kid.sysId = :kidId and r.date = :date")
+	@Query("SELECT r FROM Reservation r WHERE r.kid.sysId = :kidId AND r.date = :date AND TYPE(r) = Reservation")
 	Optional<Reservation> findByKidIdAndDate(@Param("kidId") Long kidId, @Param("date") LocalDate date);
 
 }
