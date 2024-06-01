@@ -18,10 +18,6 @@ public class MainController {
 		this.kidService = kidService;
 	}
 
-	@GetMapping("/kids")
-	public ResponseEntity<List<KidResponseDto>> index() {
-		List<KidResponseDto> responseKidList = kidService.getAllKids();
-		return new ResponseEntity<>(responseKidList, HttpStatus.OK);
-	}
+
 
 }

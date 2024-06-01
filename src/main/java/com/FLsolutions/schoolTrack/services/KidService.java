@@ -7,5 +7,7 @@ import com.FLsolutions.schoolTrack.dtos.KidResponseDto;
 public interface KidService {
 
 	List<KidResponseDto> getAllKids();
+	
+	KidResponseDto fetchKidBySysId(Long sysId);
 
 }
