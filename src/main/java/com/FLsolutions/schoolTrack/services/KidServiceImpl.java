@@ -46,18 +46,18 @@ public class KidServiceImpl implements KidService {
 	}
 
 	@Override
-	public StatusResponseDto createKid(KidCreationRequestDto request, Long parentSysId) {
+	public StatusResponseDto createKid(KidCreationRequestDto request) {
 		StatusResponseDto response = new StatusResponseDto("");
 		
 		//check if the parent exists
-		Optional<Parent> optinalParent = parentRepository.findBySysId(parentSysId);
+		Optional<Parent> optinalParent = parentRepository.findBySysId(request.getParentSysId());
 		Parent parent;
 		List<Parent> parentList = new ArrayList<>();
 		
 		if(optinalParent.isPresent()) {
 			parent = optinalParent.get();
 			parentList.add(parent);
-		} else throw new GenericEventException("A parent with id " + parentSysId + " doesnt exist in the database.", HttpStatus.NOT_FOUND);
+		} else throw new GenericEventException("A parent with id " + request.getParentSysId() + " doesnt exist in the database.", HttpStatus.NOT_FOUND);
 		
 		//save kid
 		Kid kid = new Kid(request.getFirstName(), request.getLastName(), parentList);

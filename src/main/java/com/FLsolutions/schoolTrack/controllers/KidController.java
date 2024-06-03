@@ -50,8 +50,7 @@ public class KidController {
 	
 	@PostMapping("")
 	public ResponseEntity<StatusResponseDto> create(@RequestBody KidCreationRequestDto dto) {
-		Long parentSysId = 1L;
-		StatusResponseDto response = kidService.createKid(dto, parentSysId);
+		StatusResponseDto response = kidService.createKid(dto);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 

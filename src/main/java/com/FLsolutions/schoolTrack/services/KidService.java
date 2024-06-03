@@ -12,6 +12,6 @@ public interface KidService {
 	
 	KidResponseDto fetchKidBySysId(Long sysId);
 	
-	StatusResponseDto createKid(KidCreationRequestDto request, Long parentSysId);
+	StatusResponseDto createKid(KidCreationRequestDto request);
 
 }
