@@ -88,11 +88,15 @@ public class AttendanceServiceImpl implements AttendanceService {
 			throw new GenericAttendanceException("Attendance is not possible to cancel anymore.",
 					HttpStatus.BAD_REQUEST);
 		} else {
+			// if cancelled late (less than 24h before the event), no substitute credit will
+			// be granted
 			if (!attendance.isCancelableOnTime()) {
 				attendance.setAttendanceStatus(AttendanceStatus.CANCELED_LATE);
 				attendanceRepository.save(attendance);
 				response.setStatus("Attendance canceled late, Substitute Credit was not granted.");
 			} else {
+				// if cancelled at least 24h before the event, substitute credit is granted (the
+				// time can be changed in Attendance model)
 				attendance.setAttendanceStatus(AttendanceStatus.CANCELED_ON_TIME);
 				attendanceRepository.save(attendance);
 
@@ -100,8 +104,6 @@ public class AttendanceServiceImpl implements AttendanceService {
 				response.setStatus("Attendance canceled and Substitute Credit granted successfully.");
 			}
 		}
-
 		return response;
 	}
-
 }
