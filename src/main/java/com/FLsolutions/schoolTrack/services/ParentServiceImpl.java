@@ -1,6 +1,7 @@
 package com.FLsolutions.schoolTrack.services;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
@@ -49,5 +50,16 @@ public class ParentServiceImpl implements ParentService {
 	public List<ParentResponseDto> fetchAllParents() {
 		List<Parent> parents = parentRepository.findAll();
 		return parents.stream().map(parent -> new ParentResponseDto(parent)).collect(Collectors.toList());
+	}
+
+	@Override
+	public ParentResponseDto fetchParentBySysId(Long sysId) {
+		Optional<Parent> existingParent = parentRepository.findBySysId(sysId);
+		if(existingParent.isEmpty()) {
+			throw new GenericUserException("Parent with this id doesnt exist in the database.", HttpStatus.NOT_FOUND);
+		} else {
+			return new ParentResponseDto(existingParent.get());
+		}
+		
 	}
 }
