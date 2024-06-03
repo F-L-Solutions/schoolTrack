@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.FLsolutions.schoolTrack.services.Utils;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -34,6 +36,7 @@ public class User {
 	public User(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
+        this.userName = Utils.createUserName(firstName, lastName);
     }
 	
 	public User(String firstName, String lastName, String telNumber, String email) {
@@ -41,14 +44,14 @@ public class User {
         this.telNumber = telNumber;
 		this.email = email;
 		
-		this.userName = createUserName(firstName, lastName);
+		this.userName = Utils.createUserName(firstName, lastName);
 		//method to create safe password to be done
 		this.password = createPassword();
     }
 	
-	public String createUserName(String firstName, String lastName) {
-		return firstName + lastName;
-	}
+//	public String createUserName(String firstName, String lastName) {
+//		return firstName + lastName;
+//	}
 	
 	public String createPassword() {
 		return "password";

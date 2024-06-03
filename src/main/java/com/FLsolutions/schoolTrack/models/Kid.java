@@ -1,6 +1,8 @@
 package com.FLsolutions.schoolTrack.models;
 
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -8,7 +10,7 @@ import java.util.List;
 public class Kid extends User {
 
 	@ManyToMany(mappedBy = "kids")
-	private List<Parent> parents;
+	private List<Parent> parents = new ArrayList<Parent>();
 	
 	@OneToMany(mappedBy = "kid", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private List<Reservation> reservations;
@@ -25,10 +27,20 @@ public class Kid extends User {
 		super();
 	}
 
-	public Kid(String firstName, String lastName, DayType dayType, List<Parent> parents) {
+	public Kid(String firstName, String lastName, List<Parent> parents) {
 		super(firstName, lastName);
-		this.dayType = dayType;
 		this.parents = parents;
+	}
+	
+//	public Kid(String firstName, String lastName, DayType dayType, List<Parent> parents) {
+//		super(firstName, lastName);
+//		this.dayType = dayType;
+//		this.parents = parents;
+//	}
+	
+	public void addParent(Parent parent) {
+		this.parents.add(parent);
+		parent.getKids().add(this);
 	}
 
 	public DayType getDayType() {

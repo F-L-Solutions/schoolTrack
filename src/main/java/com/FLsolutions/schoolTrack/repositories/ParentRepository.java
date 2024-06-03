@@ -1,6 +1,7 @@
 package com.FLsolutions.schoolTrack.repositories;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -15,5 +16,7 @@ public interface ParentRepository extends JpaRepository<Parent, Long> {
 	Parent findByUserName(String userName);
 	
 	List<Parent> findAll();
+	
+	Optional<Parent> findBySysId(Long sysId);
 
 }
