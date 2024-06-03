@@ -8,10 +8,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.FLsolutions.schoolTrack.dtos.AttendanceCreationRequestDto;
+import com.FLsolutions.schoolTrack.dtos.KidCreationRequestDto;
 import com.FLsolutions.schoolTrack.dtos.KidResponseDto;
+import com.FLsolutions.schoolTrack.dtos.StatusResponseDto;
 import com.FLsolutions.schoolTrack.services.KidService;
 
 @RestController
@@ -40,6 +46,12 @@ public class KidController {
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+	}
+	
+	@PostMapping("")
+	public ResponseEntity<StatusResponseDto> create(@RequestBody KidCreationRequestDto dto) {
+		StatusResponseDto response = kidService.createKid(dto);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 }

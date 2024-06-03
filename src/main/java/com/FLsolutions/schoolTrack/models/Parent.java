@@ -1,5 +1,6 @@
 package com.FLsolutions.schoolTrack.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.*;
@@ -10,7 +11,7 @@ public class Parent extends User {
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "parent_kid", joinColumns = @JoinColumn(name = "parent_id"), inverseJoinColumns = @JoinColumn(name = "kid_id"))
-	private List<Kid> kids;
+	private List<Kid> kids = new ArrayList<Kid>();
 
 	public Parent() {
 	}
