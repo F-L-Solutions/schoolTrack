@@ -38,11 +38,6 @@ public class Kid extends User {
 //		this.parents = parents;
 //	}
 	
-	public void addParent(Parent parent) {
-		this.parents.add(parent);
-		parent.getKids().add(this);
-	}
-
 	public DayType getDayType() {
 		return dayType;
 	}

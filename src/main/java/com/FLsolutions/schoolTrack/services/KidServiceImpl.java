@@ -17,9 +17,11 @@ import com.FLsolutions.schoolTrack.models.Parent;
 import com.FLsolutions.schoolTrack.repositories.KidRepository;
 import com.FLsolutions.schoolTrack.repositories.ParentRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class KidServiceImpl implements KidService {
-	
+
 	private KidRepository kidRepository;
 	private ParentRepository parentRepository;
 //	private Utils utils;
@@ -39,36 +41,37 @@ public class KidServiceImpl implements KidService {
 	public KidResponseDto fetchKidBySysId(Long sysId) {
 		Optional<Kid> optinalKid = kidRepository.findBySysId(sysId);
 
-		if(optinalKid.isPresent()) {
+		if (optinalKid.isPresent()) {
 			return new KidResponseDto(optinalKid.get());
-		} else throw new GenericEventException("A kid with id " + sysId + " doesnt exist.",
-				HttpStatus.NOT_FOUND);
+		} else
+			throw new GenericEventException("A kid with id " + sysId + " doesnt exist.", HttpStatus.NOT_FOUND);
 	}
 
 	@Override
+	@Transactional
 	public StatusResponseDto createKid(KidCreationRequestDto request) {
 		StatusResponseDto response = new StatusResponseDto("");
-		
-		//check if the parent exists
+
+		// check if the parent exists
 		Optional<Parent> optinalParent = parentRepository.findBySysId(request.getParentSysId());
 		Parent parent;
 		List<Parent> parentList = new ArrayList<>();
-		
-		if(optinalParent.isPresent()) {
+
+		if (optinalParent.isPresent()) {
 			parent = optinalParent.get();
 			parentList.add(parent);
-		} else throw new GenericEventException("A parent with id " + request.getParentSysId() + " doesnt exist in the database.", HttpStatus.NOT_FOUND);
-		
-		//save kid
+		} else {
+			throw new GenericEventException(
+					"A parent with id " + request.getParentSysId() + " doesnt exist in the database.",
+					HttpStatus.NOT_FOUND);
+		}
+
+		// save kid
 		Kid kid = new Kid(request.getFirstName(), request.getLastName(), parentList);
-		kid.addParent(parent);
 		kidRepository.save(kid);
 		response.setStatus("Kid was created.");
-		
+
 		return response;
 	}
-	
-	
-
 
 }
