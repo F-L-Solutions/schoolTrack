@@ -1,12 +1,6 @@
 package com.FLsolutions.schoolTrack.services;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -14,11 +8,11 @@ import org.springframework.stereotype.Service;
 import com.FLsolutions.schoolTrack.dtos.AttendanceCreationRequestDto;
 import com.FLsolutions.schoolTrack.dtos.StatusResponseDto;
 import com.FLsolutions.schoolTrack.exceptions.DuplicateAttendanceException;
+import com.FLsolutions.schoolTrack.exceptions.GenericAttendanceException;
 import com.FLsolutions.schoolTrack.exceptions.GenericEventException;
 import com.FLsolutions.schoolTrack.exceptions.KidNotFoundException;
 import com.FLsolutions.schoolTrack.models.Attendance;
 import com.FLsolutions.schoolTrack.models.AttendanceStatus;
-import com.FLsolutions.schoolTrack.models.DayType;
 import com.FLsolutions.schoolTrack.models.Event;
 import com.FLsolutions.schoolTrack.models.Kid;
 import com.FLsolutions.schoolTrack.repositories.AttendanceRepository;
@@ -31,12 +25,14 @@ public class AttendanceServiceImpl implements AttendanceService {
 	private AttendanceRepository attendanceRepository;
 	private KidRepository kidRepository;
 	private EventRepository eventRepository;
+	private SubstituteCreditService substituteCreditService;
 
 	public AttendanceServiceImpl(AttendanceRepository attendanceRepository, KidRepository kidRepository,
-			EventRepository eventRepository) {
+			EventRepository eventRepository, SubstituteCreditService substituteCreditService) {
 		this.attendanceRepository = attendanceRepository;
 		this.kidRepository = kidRepository;
 		this.eventRepository = eventRepository;
+		this.substituteCreditService = substituteCreditService;
 	}
 
 	public StatusResponseDto createAttendance(AttendanceCreationRequestDto request) {
@@ -54,8 +50,9 @@ public class AttendanceServiceImpl implements AttendanceService {
 					HttpStatus.CONFLICT);
 		}
 
-		Event existingEvent = eventRepository.findByDate(request.getDate()).orElseThrow(
-				() -> new GenericEventException("For selected date there was no event found in database", HttpStatus.NOT_FOUND));
+		Event existingEvent = eventRepository.findByDate(request.getDate())
+				.orElseThrow(() -> new GenericEventException("For selected date there was no event found in database",
+						HttpStatus.NOT_FOUND));
 
 		if (existingEvent.getAvailableSpots() == 0) {
 			throw new GenericEventException("For selected date there are no more spots available",
@@ -80,4 +77,33 @@ public class AttendanceServiceImpl implements AttendanceService {
 		return response;
 	}
 
+	public StatusResponseDto cancelAttendance(Long attendanceId) {
+		StatusResponseDto response = new StatusResponseDto("");
+
+		Attendance attendance = attendanceRepository.findById(attendanceId)
+				.orElseThrow(() -> new GenericAttendanceException("Attendance not found with id: " + attendanceId,
+						HttpStatus.NOT_FOUND));
+
+		if (!attendance.isCancelable() || attendance.isAlreadyCanceled()) {
+			throw new GenericAttendanceException("Attendance is not possible to cancel anymore.",
+					HttpStatus.BAD_REQUEST);
+		} else {
+			// if cancelled late (less than 24h before the event), no substitute credit will
+			// be granted
+			if (!attendance.isCancelableOnTime()) {
+				attendance.setAttendanceStatus(AttendanceStatus.CANCELED_LATE);
+				attendanceRepository.save(attendance);
+				response.setStatus("Attendance canceled late, Substitute Credit was not granted.");
+			} else {
+				// if cancelled at least 24h before the event, substitute credit is granted (the
+				// time can be changed in Attendance model)
+				attendance.setAttendanceStatus(AttendanceStatus.CANCELED_ON_TIME);
+				attendanceRepository.save(attendance);
+
+				substituteCreditService.createSubstituteCredit(attendance.getKid());
+				response.setStatus("Attendance canceled and Substitute Credit granted successfully.");
+			}
+		}
+		return response;
+	}
 }

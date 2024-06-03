@@ -8,5 +8,7 @@ public interface AttendanceService {
 	StatusResponseDto bulkCreateAttendances(AttendanceCreationRequestDto dto);
 	
 	StatusResponseDto createAttendance(AttendanceCreationRequestDto dto);
+	
+	StatusResponseDto cancelAttendance(Long attendanceId);
 
 }

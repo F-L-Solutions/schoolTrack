@@ -1,7 +1,9 @@
 package com.FLsolutions.schoolTrack.models;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -18,12 +20,15 @@ public class Attendance extends Event {
 	@JoinColumn(name = "kid_id")
 	private Kid kid;
 
+	@Column(name= "attendance_status", length = 25)
 	@Enumerated(EnumType.STRING)
 	private AttendanceStatus attendanceStatus;
 
+	@Column(name= "attendance_day")
 	@Enumerated(EnumType.STRING)
 	private AttendanceDay attendanceDay;
 
+	@Column(name= "is_excused")
 	private boolean isExcused;
 
 	public Attendance() {
@@ -38,7 +43,7 @@ public class Attendance extends Event {
 		this.attendanceDay = attendanceDay;
 		this.isExcused = false;
 	}
-	
+
 	public Attendance(LocalDate date, DayType dayType, Kid kid, AttendanceDay attendanceDay) {
 		super(date, dayType);
 		this.kid = kid;
@@ -46,12 +51,24 @@ public class Attendance extends Event {
 		this.attendanceDay = attendanceDay;
 		this.isExcused = false;
 	}
-	
+
 	public Attendance(LocalDate date, DayType dayType, Kid kid) {
 		super(date, dayType);
 		this.kid = kid;
 		this.attendanceStatus = AttendanceStatus.IDLE;
 		this.isExcused = false;
+	}
+
+	public boolean isCancelableOnTime() {
+		return LocalDateTime.now().isBefore(this.getDate().atStartOfDay().minusHours(24));
+	}
+	
+	public boolean isCancelable() {
+		return LocalDateTime.now().isBefore(this.getDate().atStartOfDay());
+	}
+	
+	public boolean isAlreadyCanceled() {
+		return this.attendanceStatus == AttendanceStatus.CANCELED_LATE || this.attendanceStatus == AttendanceStatus.CANCELED_ON_TIME;
 	}
 
 	public Kid getKid() {
