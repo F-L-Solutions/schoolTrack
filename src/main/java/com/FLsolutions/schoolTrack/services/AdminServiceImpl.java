@@ -25,19 +25,23 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public StatusResponseDto createAdmin(AdminCreationRequestDto request) {
 		StatusResponseDto responseDto = new StatusResponseDto("");
-
-		if (adminRepository.findByEmail(request.getEmail()) != null) {
+		
+		Optional<Admin> existingAdmin = adminRepository.findByEmail(request.getEmail());
+		if (existingAdmin.isPresent()) {
 			throw new DuplicateEmailException("Email already exists", HttpStatus.CONFLICT);
 		}
+		
+		existingAdmin = adminRepository.findByFirstNameAndLastName(request.getFirstName(),
+				request.getLastName());
 
-		if (adminRepository.findByFirstNameAndLastName(request.getFirstName(), request.getLastName()) != null) {
+		if (existingAdmin.isPresent()) {
 			throw new GenericUserException("Admin with this name already exists.", HttpStatus.CONFLICT);
-		}
-		Admin admin = new Admin(request.getFirstName(), request.getLastName(), request.getEmail(),
-				request.getAdminRole());
-		adminRepository.save(admin);
-		responseDto.setStatus("Admin was created");
-
+		} 
+			Admin admin = new Admin(request.getFirstName(), request.getLastName(), request.getEmail(),
+					request.getAdminRole());
+			adminRepository.save(admin);
+			responseDto.setStatus("Admin was created");
+		
 		return responseDto;
 	}
 
