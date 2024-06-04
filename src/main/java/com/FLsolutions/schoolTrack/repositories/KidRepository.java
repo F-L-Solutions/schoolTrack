@@ -18,6 +18,8 @@ public interface KidRepository extends JpaRepository<Kid, Long> {
 
 	Optional<Kid> findBySysId(Long sysId);
 	
+	Optional<Kid> findByFirstNameAndLastName(String firstName, String lastName);
+	
 	
 //  Leaving the query here for possible future use
 //	@Query(value = "SELECT k.* FROM `school-track`.kids k "
