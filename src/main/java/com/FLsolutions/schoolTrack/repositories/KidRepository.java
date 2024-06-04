@@ -1,5 +1,6 @@
 package com.FLsolutions.schoolTrack.repositories;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,8 +9,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.FLsolutions.schoolTrack.dtos.KidResponseDto;
+import com.FLsolutions.schoolTrack.models.Attendance;
 import com.FLsolutions.schoolTrack.models.AttendanceDay;
 import com.FLsolutions.schoolTrack.models.Kid;
+import com.FLsolutions.schoolTrack.models.Parent;
+
 
 public interface KidRepository extends JpaRepository<Kid, Long> {
 
@@ -21,6 +25,8 @@ public interface KidRepository extends JpaRepository<Kid, Long> {
 	
 	Optional<Kid> findByFirstNameAndLastName(String firstName, String lastName);
 	
+	@Query("SELECT k FROM Kid k JOIN k.parents p WHERE p.sysId = :parentId")
+    Optional<List<Kid>> findByParentId(@Param("parentId") Long parentId);
 	
 //  Leaving the query here for possible future use
 //	@Query(value = "SELECT k.* FROM `school-track`.kids k "

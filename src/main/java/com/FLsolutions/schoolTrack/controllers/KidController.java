@@ -61,5 +61,11 @@ public class KidController {
 		List<String> responseKidList = kidService.fetchKidsByAttendanceDay(AttendanceDay.valueOf(attendanceDay));
 		return new ResponseEntity<>(responseKidList, HttpStatus.OK);
 	}
+	
+	@GetMapping("/parent/{id}")
+	public ResponseEntity<List<KidResponseDto>> getKidsByParentId(@PathVariable("id") Long parentId){
+		List<KidResponseDto> responseKidList = kidService.fetchKidsByParentId(parentId);
+		return new ResponseEntity<>(responseKidList, HttpStatus.OK);
+	}
 
 }

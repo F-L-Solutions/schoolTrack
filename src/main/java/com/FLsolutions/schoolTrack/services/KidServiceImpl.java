@@ -100,4 +100,26 @@ public class KidServiceImpl implements KidService {
 		return resultList;
 	}
 
+	@Override
+	public List<KidResponseDto> fetchKidsByParentId(Long parentId) {
+	    
+	    // Parent Existence Check
+	    Optional<Parent> parentOptional = parentRepository.findBySysId(parentId);
+	    if (parentOptional.isEmpty()) {
+	        throw new GenericUserException("Parent with ID " + parentId + " not found.", HttpStatus.NOT_FOUND);
+	    }
+
+	    List<KidResponseDto> resultList = new ArrayList<>();
+	    Optional<List<Kid>> existingKids = kidRepository.findByParentId(parentId);
+
+	    if (existingKids.isEmpty() || existingKids.get().isEmpty()) {
+	        throw new GenericUserException("No kids found for parent ID " + parentId + ".", HttpStatus.NOT_FOUND);
+	    }
+	    
+	    List<Kid> kids = existingKids.get();
+	    kids.forEach(kid -> resultList.add(new KidResponseDto(kid)));
+
+	    return resultList;
+	}
+
 }

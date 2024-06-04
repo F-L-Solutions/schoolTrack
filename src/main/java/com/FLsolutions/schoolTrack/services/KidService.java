@@ -16,5 +16,7 @@ public interface KidService {
 	StatusResponseDto createKid(KidCreationRequestDto request);
 	
 	List<String> fetchKidsByAttendanceDay(AttendanceDay attendanceDay);
+	
+	List<KidResponseDto> fetchKidsByParentId(Long parentId);
 
 }
