@@ -1,6 +1,5 @@
 package com.FLsolutions.schoolTrack.services;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -14,16 +13,15 @@ import com.FLsolutions.schoolTrack.dtos.KidResponseDto;
 import com.FLsolutions.schoolTrack.dtos.StatusResponseDto;
 import com.FLsolutions.schoolTrack.exceptions.GenericEventException;
 import com.FLsolutions.schoolTrack.exceptions.GenericUserException;
+
 import com.FLsolutions.schoolTrack.models.Attendance;
 import com.FLsolutions.schoolTrack.models.AttendanceDay;
-import com.FLsolutions.schoolTrack.models.AttendanceStatus;
+
 import com.FLsolutions.schoolTrack.models.Kid;
 import com.FLsolutions.schoolTrack.models.Parent;
 import com.FLsolutions.schoolTrack.repositories.AttendanceRepository;
 import com.FLsolutions.schoolTrack.repositories.KidRepository;
 import com.FLsolutions.schoolTrack.repositories.ParentRepository;
-
-import jakarta.transaction.Transactional;
 
 @Service
 public class KidServiceImpl implements KidService {
@@ -57,30 +55,39 @@ public class KidServiceImpl implements KidService {
 	}
 
 	@Override
-	@Transactional
 	public StatusResponseDto createKid(KidCreationRequestDto request) {
-		StatusResponseDto response = new StatusResponseDto("");
+	    StatusResponseDto response = new StatusResponseDto("");
 
-		// check if the parent exists
-		Optional<Parent> optinalParent = parentRepository.findBySysId(request.getParentSysId());
-		Parent parent;
-		List<Parent> parentList = new ArrayList<>();
+	    // Check if the parent exists
+	    Optional<Parent> optionalParent = parentRepository.findBySysId(request.getParentSysId());
+	    Parent parent;
+	    List<Parent> parentList = new ArrayList<>();
 
-		if (optinalParent.isPresent()) {
-			parent = optinalParent.get();
-			parentList.add(parent);
-		} else {
-			throw new GenericEventException(
-					"A parent with id " + request.getParentSysId() + " doesnt exist in the database.",
-					HttpStatus.NOT_FOUND);
-		}
+	    if (optionalParent.isPresent()) {
+	        parent = optionalParent.get();
+	        parentList.add(parent);
+	    } else {
+	        throw new GenericUserException(
+	                "A parent with id " + request.getParentSysId() + " doesn't exist in the database.",
+	                HttpStatus.NOT_FOUND);
+	    }
 
-		// save kid
-		Kid kid = new Kid(request.getFirstName(), request.getLastName(), parentList);
-		kidRepository.save(kid);
-		response.setStatus("Kid was created.");
+	    // Check if a kid with the same first and last name exists
+	    Optional<Kid> existingKid = kidRepository.findByFirstNameAndLastName(request.getFirstName(), request.getLastName());
 
-		return response;
+	    if (existingKid.isPresent()) {
+	        throw new GenericUserException(
+	                "A kid with the name " + request.getFirstName() + " " + request.getLastName() +
+	                " already exists.",
+	                HttpStatus.CONFLICT);
+	    }
+
+	    // Save kid
+	    Kid kid = new Kid(request.getFirstName(), request.getLastName(), parentList);
+	    kidRepository.save(kid);
+	    response.setStatus("Kid was created.");
+
+	    return response;
 	}
 
 	@Override
