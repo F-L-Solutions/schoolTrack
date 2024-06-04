@@ -19,8 +19,6 @@ public interface KidRepository extends JpaRepository<Kid, Long> {
 
 	Optional<Kid> findBySysId(Long sysId);
 	
-//	Optional<List<Kid>> findAllByAttendanceDay(AttendanceDay attendanceDay);
-	
 	
 //  Leaving the query here for possible future use
 //	@Query(value = "SELECT k.* FROM `school-track`.kids k "

@@ -16,6 +16,7 @@ import com.FLsolutions.schoolTrack.exceptions.GenericEventException;
 import com.FLsolutions.schoolTrack.exceptions.GenericUserException;
 import com.FLsolutions.schoolTrack.models.Attendance;
 import com.FLsolutions.schoolTrack.models.AttendanceDay;
+import com.FLsolutions.schoolTrack.models.AttendanceStatus;
 import com.FLsolutions.schoolTrack.models.Kid;
 import com.FLsolutions.schoolTrack.models.Parent;
 import com.FLsolutions.schoolTrack.repositories.AttendanceRepository;
@@ -32,7 +33,8 @@ public class KidServiceImpl implements KidService {
 	private AttendanceRepository attendanceRepository;
 //	private Utils utils;
 
-	public KidServiceImpl(KidRepository kidRepository, ParentRepository parentRepository, AttendanceRepository attendanceRepository) {
+	public KidServiceImpl(KidRepository kidRepository, ParentRepository parentRepository,
+			AttendanceRepository attendanceRepository) {
 		this.kidRepository = kidRepository;
 		this.parentRepository = parentRepository;
 		this.attendanceRepository = attendanceRepository;
@@ -86,23 +88,9 @@ public class KidServiceImpl implements KidService {
 		List<String> resultList = new ArrayList<String>();
 		Optional<List<Attendance>> existingAttendance = attendanceRepository.findByAttendanceDay(attendanceDay);
 		List<Attendance> attendaces = existingAttendance.get();
-		
-		attendaces.forEach(attendance -> resultList.add(attendance.getKid().getFirstName() + attendance.getKid().getLastName()));
-//		Optional<List<Kid>> optionalKids = kidRepository.findAllByAttendanceDay(attendanceDay);
-//		List<Kid> attendingKids = new ArrayList<Kid>(); 
-//		List<String> resultList = new ArrayList<String>();
-//		
-//		if(optionalKids.isEmpty()) {
-//			throw new GenericUserException("No kids attending this day: " + attendanceDay, HttpStatus.NOT_FOUND);
-//		}
-//		
-//		attendingKids = optionalKids.get();
-//		attendingKids.forEach(kid -> resultList.add(kid.getFirstName() + " " + kid.getLastName()));
-		
-		
+
+		attendaces.forEach(attendance -> resultList.add(attendance.getKid().getFirstName() + " " + attendance.getKid().getLastName()));
 		return resultList;
 	}
-	
-	
 
 }
