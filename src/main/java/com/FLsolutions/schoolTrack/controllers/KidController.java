@@ -18,6 +18,7 @@ import com.FLsolutions.schoolTrack.dtos.AttendanceCreationRequestDto;
 import com.FLsolutions.schoolTrack.dtos.KidCreationRequestDto;
 import com.FLsolutions.schoolTrack.dtos.KidResponseDto;
 import com.FLsolutions.schoolTrack.dtos.StatusResponseDto;
+import com.FLsolutions.schoolTrack.models.AttendanceDay;
 import com.FLsolutions.schoolTrack.services.KidService;
 
 @RestController
@@ -52,6 +53,13 @@ public class KidController {
 	public ResponseEntity<StatusResponseDto> create(@RequestBody KidCreationRequestDto dto) {
 		StatusResponseDto response = kidService.createKid(dto);
 		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	@GetMapping("/attendance/{day}")
+	public ResponseEntity<List<String>> getKidsByAttendanceDay(@PathVariable("day") String day) {
+		String attendanceDay = day.toUpperCase();
+		List<String> responseKidList = kidService.fetchKidsByAttendanceDay(AttendanceDay.valueOf(attendanceDay));
+		return new ResponseEntity<>(responseKidList, HttpStatus.OK);
 	}
 
 }

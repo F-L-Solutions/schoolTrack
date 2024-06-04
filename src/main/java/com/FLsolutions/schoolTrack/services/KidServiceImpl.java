@@ -1,5 +1,6 @@
 package com.FLsolutions.schoolTrack.services;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -12,8 +13,12 @@ import com.FLsolutions.schoolTrack.dtos.KidCreationRequestDto;
 import com.FLsolutions.schoolTrack.dtos.KidResponseDto;
 import com.FLsolutions.schoolTrack.dtos.StatusResponseDto;
 import com.FLsolutions.schoolTrack.exceptions.GenericEventException;
+import com.FLsolutions.schoolTrack.exceptions.GenericUserException;
+import com.FLsolutions.schoolTrack.models.Attendance;
+import com.FLsolutions.schoolTrack.models.AttendanceDay;
 import com.FLsolutions.schoolTrack.models.Kid;
 import com.FLsolutions.schoolTrack.models.Parent;
+import com.FLsolutions.schoolTrack.repositories.AttendanceRepository;
 import com.FLsolutions.schoolTrack.repositories.KidRepository;
 import com.FLsolutions.schoolTrack.repositories.ParentRepository;
 
@@ -24,11 +29,13 @@ public class KidServiceImpl implements KidService {
 
 	private KidRepository kidRepository;
 	private ParentRepository parentRepository;
+	private AttendanceRepository attendanceRepository;
 //	private Utils utils;
 
-	public KidServiceImpl(KidRepository kidRepository, ParentRepository parentRepository) {
+	public KidServiceImpl(KidRepository kidRepository, ParentRepository parentRepository, AttendanceRepository attendanceRepository) {
 		this.kidRepository = kidRepository;
 		this.parentRepository = parentRepository;
+		this.attendanceRepository = attendanceRepository;
 	}
 
 	@Override
@@ -73,5 +80,29 @@ public class KidServiceImpl implements KidService {
 
 		return response;
 	}
+
+	@Override
+	public List<String> fetchKidsByAttendanceDay(AttendanceDay attendanceDay) {
+		List<String> resultList = new ArrayList<String>();
+		Optional<List<Attendance>> existingAttendance = attendanceRepository.findByAttendanceDay(attendanceDay);
+		List<Attendance> attendaces = existingAttendance.get();
+		
+		attendaces.forEach(attendance -> resultList.add(attendance.getKid().getFirstName() + attendance.getKid().getLastName()));
+//		Optional<List<Kid>> optionalKids = kidRepository.findAllByAttendanceDay(attendanceDay);
+//		List<Kid> attendingKids = new ArrayList<Kid>(); 
+//		List<String> resultList = new ArrayList<String>();
+//		
+//		if(optionalKids.isEmpty()) {
+//			throw new GenericUserException("No kids attending this day: " + attendanceDay, HttpStatus.NOT_FOUND);
+//		}
+//		
+//		attendingKids = optionalKids.get();
+//		attendingKids.forEach(kid -> resultList.add(kid.getFirstName() + " " + kid.getLastName()));
+		
+		
+		return resultList;
+	}
+	
+	
 
 }

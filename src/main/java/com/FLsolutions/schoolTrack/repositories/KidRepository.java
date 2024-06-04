@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.FLsolutions.schoolTrack.dtos.KidResponseDto;
+import com.FLsolutions.schoolTrack.models.AttendanceDay;
 import com.FLsolutions.schoolTrack.models.Kid;
 
 public interface KidRepository extends JpaRepository<Kid, Long> {
@@ -17,6 +18,8 @@ public interface KidRepository extends JpaRepository<Kid, Long> {
 	Optional<Kid> findByUserName(String username);
 
 	Optional<Kid> findBySysId(Long sysId);
+	
+//	Optional<List<Kid>> findAllByAttendanceDay(AttendanceDay attendanceDay);
 	
 	
 //  Leaving the query here for possible future use
