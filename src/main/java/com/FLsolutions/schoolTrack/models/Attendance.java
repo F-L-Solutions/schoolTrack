@@ -1,7 +1,10 @@
 package com.FLsolutions.schoolTrack.models;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.TextStyle;
+import java.util.Locale;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,28 +38,29 @@ public class Attendance extends Event {
 		super();
 	}
 
-	public Attendance(LocalDate date, DayType dayType, Kid kid, AttendanceStatus attendanceStatus,
-			AttendanceDay attendanceDay) {
+	public Attendance(LocalDate date, DayType dayType, Kid kid, AttendanceStatus attendanceStatus) {
 		super(date, dayType);
 		this.kid = kid;
 		this.attendanceStatus = attendanceStatus;
-		this.attendanceDay = attendanceDay;
 		this.isExcused = false;
+		this.setAttendanceDay(date);
 	}
 
-	public Attendance(LocalDate date, DayType dayType, Kid kid, AttendanceDay attendanceDay) {
-		super(date, dayType);
-		this.kid = kid;
-		this.attendanceStatus = AttendanceStatus.IDLE;
-		this.attendanceDay = attendanceDay;
-		this.isExcused = false;
-	}
+//	public Attendance(LocalDate date, DayType dayType, Kid kid, AttendanceDay attendanceDay) {
+//		super(date, dayType);
+//		this.kid = kid;
+//		this.attendanceStatus = AttendanceStatus.IDLE;
+//		this.attendanceDay = attendanceDay;
+//		this.isExcused = false;
+//		this.setAttendanceDay(date);
+//	}
 
 	public Attendance(LocalDate date, DayType dayType, Kid kid) {
 		super(date, dayType);
 		this.kid = kid;
 		this.attendanceStatus = AttendanceStatus.IDLE;
 		this.isExcused = false;
+		this.setAttendanceDay(date);
 	}
 
 	public boolean isCancelableOnTime() {
@@ -91,7 +95,10 @@ public class Attendance extends Event {
 		return attendanceDay;
 	}
 
-	public void setAttendanceDay(AttendanceDay attendanceDay) {
+	public void setAttendanceDay(LocalDate date) {
+		DayOfWeek dayOfWeek = date.getDayOfWeek();
+		AttendanceDay attendanceDay = AttendanceDay.valueOf(dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.ENGLISH).toString().toUpperCase());
+		
 		this.attendanceDay = attendanceDay;
 	}
 
