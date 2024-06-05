@@ -14,5 +14,7 @@ public interface AdminRepository extends JpaRepository<Admin, Long>{
 	
 	Optional<Admin> findByFirstNameAndLastName(String firstName, String lastName);
 	
+	List<Admin> findAll();
+	
 
 }

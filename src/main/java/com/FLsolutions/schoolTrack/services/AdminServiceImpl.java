@@ -1,12 +1,16 @@
 package com.FLsolutions.schoolTrack.services;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.parsing.PassThroughSourceExtractor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.FLsolutions.schoolTrack.dtos.AdminCreationRequestDto;
+import com.FLsolutions.schoolTrack.dtos.AdminResponseDto;
 import com.FLsolutions.schoolTrack.dtos.StatusResponseDto;
 import com.FLsolutions.schoolTrack.exceptions.DuplicateEmailException;
 import com.FLsolutions.schoolTrack.exceptions.GenericUserException;
@@ -43,6 +47,21 @@ public class AdminServiceImpl implements AdminService {
 			responseDto.setStatus("Admin was created");
 		
 		return responseDto;
+	}
+
+	@Override
+	public List<AdminResponseDto> fetchAllAdmin() {
+	    List<AdminResponseDto> adminDto = new ArrayList<>();
+
+	    List<Admin> admins = adminRepository.findAll();
+
+	    if (admins.isEmpty()) {
+	        throw new GenericUserException("No admins exist in the database.", HttpStatus.NOT_FOUND);
+	    }
+
+	    admins.forEach(admin -> adminDto.add(new AdminResponseDto(admin)));
+
+	    return adminDto;
 	}
 
 }
