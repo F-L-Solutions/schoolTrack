@@ -1,5 +1,6 @@
 package com.FLsolutions.schoolTrack.services;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +20,9 @@ import com.FLsolutions.schoolTrack.models.AttendanceDay;
 
 import com.FLsolutions.schoolTrack.models.Kid;
 import com.FLsolutions.schoolTrack.models.Parent;
+import com.FLsolutions.schoolTrack.models.Event;
 import com.FLsolutions.schoolTrack.repositories.AttendanceRepository;
+import com.FLsolutions.schoolTrack.repositories.EventRepository;
 import com.FLsolutions.schoolTrack.repositories.KidRepository;
 import com.FLsolutions.schoolTrack.repositories.ParentRepository;
 
@@ -29,13 +32,15 @@ public class KidServiceImpl implements KidService {
 	private KidRepository kidRepository;
 	private ParentRepository parentRepository;
 	private AttendanceRepository attendanceRepository;
+	private EventRepository eventRepository;
 //	private Utils utils;
 
 	public KidServiceImpl(KidRepository kidRepository, ParentRepository parentRepository,
-			AttendanceRepository attendanceRepository) {
+			AttendanceRepository attendanceRepository, EventRepository eventRepository) {
 		this.kidRepository = kidRepository;
 		this.parentRepository = parentRepository;
 		this.attendanceRepository = attendanceRepository;
+		this.eventRepository = eventRepository;
 	}
 
 	@Override
@@ -118,6 +123,28 @@ public class KidServiceImpl implements KidService {
 	    
 	    List<Kid> kids = existingKids.get();
 	    kids.forEach(kid -> resultList.add(new KidResponseDto(kid)));
+
+	    return resultList;
+	}
+
+	@Override
+	public List<KidResponseDto> fetchKidsByAttendanceDate(LocalDate date) {
+	    List<KidResponseDto> resultList = new ArrayList<>();
+
+	    // Check if an event exists for the given date
+	    Optional<Event> existingEvent = eventRepository.findByDate(date);
+	    if (existingEvent.isEmpty()) {
+	        throw new GenericEventException("An event for this date doesn't exist: " + date.toString(), HttpStatus.NOT_FOUND);
+	    }
+
+	    Optional<List<Kid>> existingKids = kidRepository.findByAttendanceDate(date);
+
+	    // Check if any kids are found for the given date
+	    if (existingKids.isEmpty() || existingKids.get().isEmpty()) {
+	        throw new GenericEventException("No kids found for the attendance date: " + date.toString(), HttpStatus.NOT_FOUND);
+	    }
+
+	    existingKids.get().forEach(kid -> resultList.add(new KidResponseDto(kid)));
 
 	    return resultList;
 	}

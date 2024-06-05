@@ -1,5 +1,6 @@
 package com.FLsolutions.schoolTrack.controllers;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,6 +66,12 @@ public class KidController {
 	@GetMapping("/parent/{id}")
 	public ResponseEntity<List<KidResponseDto>> getKidsByParentId(@PathVariable("id") Long parentId){
 		List<KidResponseDto> responseKidList = kidService.fetchKidsByParentId(parentId);
+		return new ResponseEntity<>(responseKidList, HttpStatus.OK);
+	}
+	
+	@GetMapping("/attendance-date/{date}")
+	public ResponseEntity<List<KidResponseDto>> getKidsByAttendanceDate(@PathVariable("date") LocalDate date){
+		List<KidResponseDto> responseKidList = kidService.fetchKidsByAttendanceDate(date);
 		return new ResponseEntity<>(responseKidList, HttpStatus.OK);
 	}
 

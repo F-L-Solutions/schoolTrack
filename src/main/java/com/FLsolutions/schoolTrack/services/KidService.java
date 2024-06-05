@@ -1,5 +1,6 @@
 package com.FLsolutions.schoolTrack.services;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import com.FLsolutions.schoolTrack.dtos.KidCreationRequestDto;
@@ -18,5 +19,7 @@ public interface KidService {
 	List<String> fetchKidsByAttendanceDay(AttendanceDay attendanceDay);
 	
 	List<KidResponseDto> fetchKidsByParentId(Long parentId);
+	
+	List<KidResponseDto> fetchKidsByAttendanceDate(LocalDate date);
 
 }

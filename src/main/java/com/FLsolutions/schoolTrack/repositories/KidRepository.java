@@ -28,6 +28,9 @@ public interface KidRepository extends JpaRepository<Kid, Long> {
 	@Query("SELECT k FROM Kid k JOIN k.parents p WHERE p.sysId = :parentId")
     Optional<List<Kid>> findByParentId(@Param("parentId") Long parentId);
 	
+	@Query("SELECT k FROM Kid k JOIN k.attendanceList a WHERE a.date = :date")
+    Optional<List<Kid>> findByAttendanceDate(@Param("date") LocalDate date);
+	
 //  Leaving the query here for possible future use
 //	@Query(value = "SELECT k.* FROM `school-track`.kids k "
 //			+ "JOIN `school-track`.parent_kid pk ON k.sys_id = pk.kid_id "
