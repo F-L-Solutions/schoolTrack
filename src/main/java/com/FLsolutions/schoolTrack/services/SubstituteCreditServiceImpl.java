@@ -1,9 +1,14 @@
 package com.FLsolutions.schoolTrack.services;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.FLsolutions.schoolTrack.dtos.SubstituteCreditResponseDto;
+import com.FLsolutions.schoolTrack.exceptions.GenericEventException;
 import com.FLsolutions.schoolTrack.models.Kid;
 import com.FLsolutions.schoolTrack.models.SubstituteCredit;
 import com.FLsolutions.schoolTrack.repositories.SubstituteCreditRepository;
@@ -21,6 +26,20 @@ public class SubstituteCreditServiceImpl implements SubstituteCreditService {
 		LocalDateTime expirationDate = LocalDateTime.now().plusWeeks(1);
 		SubstituteCredit substituteCredit = new SubstituteCredit(kid, expirationDate);
 		substituteCreditRepository.save(substituteCredit);
+	}
+
+	@Override
+	public List<SubstituteCreditResponseDto> fetchAllSubstituteCredit() {
+	    List<SubstituteCredit> existingCredits = substituteCreditRepository.findAll();
+	    
+	    if (existingCredits.isEmpty()) {
+	        throw new GenericEventException("There are no credits in the database.", HttpStatus.NOT_FOUND);
+	    }
+	    
+	    List<SubstituteCreditResponseDto> creditList = new ArrayList<>();
+	    existingCredits.forEach(credit -> creditList.add(new SubstituteCreditResponseDto(credit)));
+	    
+	    return creditList;
 	}
 
 }
