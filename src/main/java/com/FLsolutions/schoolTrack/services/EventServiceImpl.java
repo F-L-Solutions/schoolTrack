@@ -1,6 +1,7 @@
 package com.FLsolutions.schoolTrack.services;
 
 import com.FLsolutions.schoolTrack.dtos.EventCreationRequestDto;
+import com.FLsolutions.schoolTrack.dtos.EventResponseDto;
 import com.FLsolutions.schoolTrack.dtos.StatusResponseDto;
 import com.FLsolutions.schoolTrack.exceptions.DuplicateEventException;
 import com.FLsolutions.schoolTrack.exceptions.GenericEventException;
@@ -63,7 +64,8 @@ public class EventServiceImpl implements EventService {
 		List<LocalDate> conflictingDates = new ArrayList<>();
 
 		if (generationStartDate.isAfter(generationEndDate)) {
-			throw new GenericEventException("0 number of days were created. Start date cannot be after end date", HttpStatus.BAD_REQUEST);
+			throw new GenericEventException("0 number of days were created. Start date cannot be after end date",
+					HttpStatus.BAD_REQUEST);
 		} else {
 			while (!currentDate.isAfter(generationEndDate)) {
 				if (currentDate.getDayOfWeek() != DayOfWeek.SATURDAY
@@ -76,5 +78,19 @@ public class EventServiceImpl implements EventService {
 			}
 		}
 		return conflictingDates;
+	}
+
+	@Override
+	public List<EventResponseDto> fetchAllEvents() {
+		List<Event> existingEvents = eventRepository.findAll();
+		List<EventResponseDto> eventList = new ArrayList<EventResponseDto>();
+
+		if (existingEvents.isEmpty()) {
+			throw new GenericEventException("There are no events in the database.", HttpStatus.NOT_FOUND);
+		}
+
+		existingEvents.forEach(event -> eventList.add(new EventResponseDto(event)));
+		
+		return eventList;
 	}
 }

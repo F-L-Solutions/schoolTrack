@@ -44,7 +44,12 @@ public class Event {
 		this.dayType = dayType;
 	}
 
-	public Enum<DayType> getDayType() {
+	
+	public long getSysId() {
+		return sysId;
+	}
+
+	public DayType getDayType() {
 		return dayType;
 	}
 

@@ -1,13 +1,17 @@
 package com.FLsolutions.schoolTrack.controllers;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.FLsolutions.schoolTrack.dtos.EventCreationRequestDto;
+import com.FLsolutions.schoolTrack.dtos.EventResponseDto;
 import com.FLsolutions.schoolTrack.dtos.ParentCreationRequestDto;
 import com.FLsolutions.schoolTrack.dtos.StatusResponseDto;
 import com.FLsolutions.schoolTrack.services.EventService;
@@ -27,6 +31,12 @@ public class EventController {
 	@PostMapping("/bulk-create")
 	public ResponseEntity<StatusResponseDto> bulkCreate(@RequestBody EventCreationRequestDto dto) {
 		StatusResponseDto response = eventService.bulkCreateEvents(dto);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+
+	@GetMapping("")
+	public ResponseEntity<List<EventResponseDto>> getAllEvents() {
+		List<EventResponseDto> response = eventService.fetchAllEvents();
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
