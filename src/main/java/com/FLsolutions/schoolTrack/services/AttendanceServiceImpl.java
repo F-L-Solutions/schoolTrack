@@ -1,11 +1,14 @@
 package com.FLsolutions.schoolTrack.services;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.FLsolutions.schoolTrack.dtos.AttendanceCreationRequestDto;
+import com.FLsolutions.schoolTrack.dtos.AttendanceResponseDto;
 import com.FLsolutions.schoolTrack.dtos.StatusResponseDto;
 import com.FLsolutions.schoolTrack.exceptions.DuplicateAttendanceException;
 import com.FLsolutions.schoolTrack.exceptions.GenericAttendanceException;
@@ -105,5 +108,18 @@ public class AttendanceServiceImpl implements AttendanceService {
 			}
 		}
 		return response;
+	}
+
+	@Override
+	public List<AttendanceResponseDto> fetchAllAttendances() {
+		List<AttendanceResponseDto> responseList = new ArrayList<AttendanceResponseDto>();
+		List<Attendance> existingAttendances = attendanceRepository.findAll();
+
+		if (existingAttendances.isEmpty()) {
+			throw new GenericAttendanceException("No attendances exist in the database.", HttpStatus.NOT_FOUND);
+		}
+
+		existingAttendances.forEach(attendance -> responseList.add(new AttendanceResponseDto(attendance)));
+		return responseList;
 	}
 }

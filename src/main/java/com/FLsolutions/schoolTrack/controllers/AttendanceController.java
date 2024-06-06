@@ -1,14 +1,18 @@
 package com.FLsolutions.schoolTrack.controllers;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.FLsolutions.schoolTrack.dtos.AttendanceCreationRequestDto;
+import com.FLsolutions.schoolTrack.dtos.AttendanceResponseDto;
 import com.FLsolutions.schoolTrack.dtos.StatusResponseDto;
 import com.FLsolutions.schoolTrack.services.AttendanceService;
 
@@ -38,6 +42,12 @@ public class AttendanceController {
 	public ResponseEntity<StatusResponseDto> cancel(@PathVariable("id") Long id) {
 		StatusResponseDto response = attendanceService.cancelAttendance(id);
 		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	@GetMapping("")
+	public ResponseEntity<List<AttendanceResponseDto>> getAllAttendances(){
+		List<AttendanceResponseDto> response = attendanceService.fetchAllAttendances();
+		return new ResponseEntity<List<AttendanceResponseDto>>(response, HttpStatus.OK);
 	}
 
 }
