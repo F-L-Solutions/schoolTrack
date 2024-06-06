@@ -12,4 +12,6 @@ public interface AdminService {
 	
 	List<AdminResponseDto> fetchAllAdmin();
 	
+	AdminResponseDto fetchAdminBySysId(Long sysId);
+	
 }

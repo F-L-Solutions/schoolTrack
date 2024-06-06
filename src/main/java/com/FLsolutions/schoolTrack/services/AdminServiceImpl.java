@@ -29,39 +29,51 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public StatusResponseDto createAdmin(AdminCreationRequestDto request) {
 		StatusResponseDto responseDto = new StatusResponseDto("");
-		
+
 		Optional<Admin> existingAdmin = adminRepository.findByEmail(request.getEmail());
 		if (existingAdmin.isPresent()) {
 			throw new DuplicateEmailException("Email already exists", HttpStatus.CONFLICT);
 		}
-		
-		existingAdmin = adminRepository.findByFirstNameAndLastName(request.getFirstName(),
-				request.getLastName());
+
+		existingAdmin = adminRepository.findByFirstNameAndLastName(request.getFirstName(), request.getLastName());
 
 		if (existingAdmin.isPresent()) {
 			throw new GenericUserException("Admin with this name already exists.", HttpStatus.CONFLICT);
-		} 
-			Admin admin = new Admin(request.getFirstName(), request.getLastName(), request.getEmail(),
-					request.getAdminRole());
-			adminRepository.save(admin);
-			responseDto.setStatus("Admin was created");
-		
+		}
+		Admin admin = new Admin(request.getFirstName(), request.getLastName(), request.getEmail(),
+				request.getAdminRole());
+		adminRepository.save(admin);
+		responseDto.setStatus("Admin was created");
+
 		return responseDto;
 	}
 
 	@Override
 	public List<AdminResponseDto> fetchAllAdmin() {
-	    List<AdminResponseDto> adminDto = new ArrayList<>();
+		List<AdminResponseDto> adminDto = new ArrayList<>();
 
-	    List<Admin> admins = adminRepository.findAll();
+		List<Admin> admins = adminRepository.findAll();
 
-	    if (admins.isEmpty()) {
-	        throw new GenericUserException("No admins exist in the database.", HttpStatus.NOT_FOUND);
-	    }
+		if (admins.isEmpty()) {
+			throw new GenericUserException("No admins exist in the database.", HttpStatus.NOT_FOUND);
+		}
 
-	    admins.forEach(admin -> adminDto.add(new AdminResponseDto(admin)));
+		admins.forEach(admin -> adminDto.add(new AdminResponseDto(admin)));
 
-	    return adminDto;
+		return adminDto;
+	}
+
+	@Override
+	public AdminResponseDto fetchAdminBySysId(Long sysId) {
+		Optional<Admin> existingAdmin = adminRepository.findBySysId(sysId);
+
+		if (existingAdmin.isEmpty()) {
+			throw new GenericUserException("Admin with this sysId doesnt exist in the database: " + sysId,
+					HttpStatus.NOT_FOUND);
+		}
+
+		AdminResponseDto responseAdmin = new AdminResponseDto(existingAdmin.get());
+		return responseAdmin;
 	}
 
 }

@@ -16,5 +16,7 @@ public interface AdminRepository extends JpaRepository<Admin, Long>{
 	
 	List<Admin> findAll();
 	
+	Optional<Admin> findBySysId(Long sysId);
+	
 
 }
