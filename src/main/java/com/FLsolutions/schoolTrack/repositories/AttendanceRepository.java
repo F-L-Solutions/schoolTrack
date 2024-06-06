@@ -21,4 +21,6 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
 	Optional<Attendance> findByKidIdAndDate(@Param("kidId") Long kidId, @Param("date") LocalDate date);
 	
 	Optional<List<Attendance>> findByAttendanceDay(AttendanceDay attendanceDay);
+	
+	List<Attendance> findAll();
 }
