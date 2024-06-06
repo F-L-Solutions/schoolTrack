@@ -7,10 +7,10 @@ import com.FLsolutions.schoolTrack.models.SubstituteCredit;
 
 public class SubstituteCreditResponseDto implements ResponseDto {
 
-	private long sysId;
-	private Kid kid;
-	private LocalDateTime expirationDate;
-	private boolean used;
+	private final long sysId;
+	private final Kid kid;
+	private final LocalDateTime expirationDate;
+	private final boolean used;
 
 	public SubstituteCreditResponseDto(SubstituteCredit credit) {
 		super();
