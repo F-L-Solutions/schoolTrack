@@ -39,9 +39,9 @@ public class SubstituteCredit {
 
 	}
 
-	public SubstituteCredit(Kid kid, LocalDateTime expirationDate) {
+	public SubstituteCredit(Kid kid) {
 		this.kid = kid;
-		this.expirationDate = expirationDate;
+		this.expirationDate = this.setExpirationDate();
 		this.used = false;
 	}
 
@@ -61,8 +61,9 @@ public class SubstituteCredit {
 		return expirationDate;
 	}
 
-	public void setExpirationDate(LocalDateTime expirationDate) {
-		this.expirationDate = expirationDate;
+	public LocalDateTime setExpirationDate() {
+		LocalDateTime defaultExpirationDate = LocalDateTime.now().plusWeeks(1);
+		return defaultExpirationDate;
 	}
 
 	public boolean isUsed() {

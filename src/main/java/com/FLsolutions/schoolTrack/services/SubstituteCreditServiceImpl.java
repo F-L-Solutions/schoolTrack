@@ -22,9 +22,8 @@ public class SubstituteCreditServiceImpl implements SubstituteCreditService {
 		this.substituteCreditRepository = substituteCreditRepository;
 	}
 
-	public void createSubstituteCredit(Kid kid) {
-		LocalDateTime expirationDate = LocalDateTime.now().plusWeeks(1);
-		SubstituteCredit substituteCredit = new SubstituteCredit(kid, expirationDate);
+	public void createSubstituteCredit(Kid kid) {		
+		SubstituteCredit substituteCredit = new SubstituteCredit(kid);
 		substituteCreditRepository.save(substituteCredit);
 	}
 
