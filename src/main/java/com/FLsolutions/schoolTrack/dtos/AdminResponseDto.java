@@ -16,6 +16,13 @@ public class AdminResponseDto implements ResponseDto{
 		this.lastName = admin.getLastName();
 		this.adminRole = admin.getAdminRole();
 	}
+	
+	public AdminResponseDto(Long sysId, String firstName, String lastName) {
+		this.sysId = sysId;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.adminRole = null;
+	}
 
 	public Long getSysId() {
 		return sysId;
