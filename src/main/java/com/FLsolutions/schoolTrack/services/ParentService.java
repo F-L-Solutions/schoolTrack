@@ -13,4 +13,6 @@ public interface ParentService {
 	StatusResponseDto createParent(ParentCreationRequestDto requestDto);
 	
 	ParentResponseDto fetchParentBySysId(Long sysId);
+	
+	List<ParentResponseDto> fetchParentsByKidSysId(Long sysId);
 }

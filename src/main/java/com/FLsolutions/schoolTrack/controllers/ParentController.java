@@ -35,17 +35,23 @@ public class ParentController {
 		StatusResponseDto responseDto = parentService.createParent(dto);
 		return new ResponseEntity<>(responseDto, HttpStatus.OK);
 	}
-	
+
 	@GetMapping("")
-	public ResponseEntity<List<ParentResponseDto>> getAllParents(){
+	public ResponseEntity<List<ParentResponseDto>> getAllParents() {
 		List<ParentResponseDto> responseParentList = parentService.fetchAllParents();
 		return new ResponseEntity<>(responseParentList, HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/{id}")
-	public ResponseEntity<ParentResponseDto> getParentBySysId(@PathVariable("id") Long id){
+	public ResponseEntity<ParentResponseDto> getParentBySysId(@PathVariable("id") Long id) {
 		ParentResponseDto responseParent = parentService.fetchParentBySysId(id);
 		return new ResponseEntity<>(responseParent, HttpStatus.OK);
+	}
+
+	@GetMapping("/kid/{id}")
+	public ResponseEntity<List<ParentResponseDto>> getParentsByKidSysId(@PathVariable("id") Long kidId) {
+		List<ParentResponseDto> responseParentList = parentService.fetchParentsByKidSysId(kidId);
+		return new ResponseEntity<>(responseParentList, HttpStatus.OK);
 	}
 
 }

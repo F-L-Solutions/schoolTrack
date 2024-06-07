@@ -1,5 +1,6 @@
 package com.FLsolutions.schoolTrack.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -55,11 +56,29 @@ public class ParentServiceImpl implements ParentService {
 	@Override
 	public ParentResponseDto fetchParentBySysId(Long sysId) {
 		Optional<Parent> existingParent = parentRepository.findBySysId(sysId);
-		if(existingParent.isEmpty()) {
+		if (existingParent.isEmpty()) {
 			throw new GenericUserException("Parent with this id doesnt exist in the database.", HttpStatus.NOT_FOUND);
 		} else {
 			return new ParentResponseDto(existingParent.get());
 		}
+
+	}
+
+	@Override
+	public List<ParentResponseDto> fetchParentsByKidSysId(Long sysId) {
+		Optional<List<Parent>> existingParents = parentRepository.findByKidSysId(sysId);
+		List<ParentResponseDto> responseList = new ArrayList<ParentResponseDto>();
+
+		if (existingParents.isEmpty()) {
+			throw new GenericUserException("No parents for this kid id found: " + sysId, HttpStatus.NOT_FOUND);
+		}
+
+		existingParents.get().forEach(parent -> responseList.add(new ParentResponseDto(parent)));
 		
+		if(responseList.isEmpty()) {
+			throw new GenericUserException("No parents for this kid id found: " + sysId, HttpStatus.NOT_FOUND);
+		}
+
+		return responseList;
 	}
 }
