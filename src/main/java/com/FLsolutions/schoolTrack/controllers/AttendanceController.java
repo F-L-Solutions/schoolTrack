@@ -49,5 +49,11 @@ public class AttendanceController {
 		List<AttendanceResponseDto> response = attendanceService.fetchAllAttendances();
 		return new ResponseEntity<List<AttendanceResponseDto>>(response, HttpStatus.OK);
 	}
+	
+	@GetMapping("/kid/{id}")
+	public ResponseEntity<List<AttendanceResponseDto>> getAttendancesByKidSysId(@PathVariable("id") Long id){
+		List<AttendanceResponseDto> response = attendanceService.fetchAttendanceByKidSysId(id);
+		return new ResponseEntity<List<AttendanceResponseDto>>(response, HttpStatus.OK);
+	}
 
 }

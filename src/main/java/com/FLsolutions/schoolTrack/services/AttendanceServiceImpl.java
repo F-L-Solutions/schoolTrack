@@ -122,4 +122,21 @@ public class AttendanceServiceImpl implements AttendanceService {
 		existingAttendances.forEach(attendance -> responseList.add(new AttendanceResponseDto(attendance)));
 		return responseList;
 	}
+
+	@Override
+	public List<AttendanceResponseDto> fetchAttendanceByKidSysId(Long sysId) {
+		Optional<List<Attendance>> existingAttendances = attendanceRepository.findByKidSysId(sysId);
+		List<AttendanceResponseDto> responseList = new ArrayList<AttendanceResponseDto>();
+
+		if (existingAttendances.isEmpty()) {
+			throw new GenericEventException("There are no attendances for kid with id: " + sysId, HttpStatus.NOT_FOUND);
+		}
+
+		existingAttendances.get().forEach(attendance -> responseList.add(new AttendanceResponseDto(attendance)));
+
+		if (responseList.isEmpty()) {
+			throw new GenericEventException("There are no attendances for kid with id: " + sysId, HttpStatus.NOT_FOUND);
+		}
+		return responseList;
+	}
 }

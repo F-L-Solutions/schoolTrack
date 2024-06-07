@@ -23,4 +23,7 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
 	Optional<List<Attendance>> findByAttendanceDay(AttendanceDay attendanceDay);
 	
 	List<Attendance> findAll();
+	
+	@Query("SELECT a FROM Attendance a WHERE a.kid.sysId = :kidId AND TYPE(a) = Attendance")
+	Optional<List<Attendance>> findByKidSysId(@Param("kidId") Long kidId);
 }

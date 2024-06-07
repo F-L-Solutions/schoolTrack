@@ -15,5 +15,7 @@ public interface AttendanceService {
 	StatusResponseDto cancelAttendance(Long attendanceId);
 	
 	List<AttendanceResponseDto> fetchAllAttendances();
+	
+	List<AttendanceResponseDto> fetchAttendanceByKidSysId(Long sysId);
 
 }
