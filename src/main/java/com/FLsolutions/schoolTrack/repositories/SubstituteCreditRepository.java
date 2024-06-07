@@ -12,5 +12,7 @@ import com.FLsolutions.schoolTrack.models.SubstituteCredit;
 public interface SubstituteCreditRepository extends JpaRepository<SubstituteCredit, Long> {
 	
 	List<SubstituteCredit> findAll();
+	
+	Optional<SubstituteCredit> findBySysId(long sysId);
 
 }

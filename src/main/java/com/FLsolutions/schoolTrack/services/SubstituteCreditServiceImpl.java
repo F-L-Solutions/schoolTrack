@@ -3,7 +3,9 @@ package com.FLsolutions.schoolTrack.services;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import org.hibernate.validator.constraints.CreditCardNumber;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -22,23 +24,35 @@ public class SubstituteCreditServiceImpl implements SubstituteCreditService {
 		this.substituteCreditRepository = substituteCreditRepository;
 	}
 
-	public void createSubstituteCredit(Kid kid) {		
+	public void createSubstituteCredit(Kid kid) {
 		SubstituteCredit substituteCredit = new SubstituteCredit(kid);
 		substituteCreditRepository.save(substituteCredit);
 	}
 
 	@Override
 	public List<SubstituteCreditResponseDto> fetchAllSubstituteCredit() {
-	    List<SubstituteCredit> existingCredits = substituteCreditRepository.findAll();
-	    
-	    if (existingCredits.isEmpty()) {
-	        throw new GenericEventException("There are no credits in the database.", HttpStatus.NOT_FOUND);
-	    }
-	    
-	    List<SubstituteCreditResponseDto> creditList = new ArrayList<>();
-	    existingCredits.forEach(credit -> creditList.add(new SubstituteCreditResponseDto(credit)));
-	    
-	    return creditList;
+		List<SubstituteCredit> existingCredits = substituteCreditRepository.findAll();
+
+		if (existingCredits.isEmpty()) {
+			throw new GenericEventException("There are no credits in the database.", HttpStatus.NOT_FOUND);
+		}
+
+		List<SubstituteCreditResponseDto> creditList = new ArrayList<>();
+		existingCredits.forEach(credit -> creditList.add(new SubstituteCreditResponseDto(credit)));
+
+		return creditList;
+	}
+
+	@Override
+	public SubstituteCreditResponseDto fetchSubstituteCreditBySysId(long sysId) {
+		Optional<SubstituteCredit> existingCredit = substituteCreditRepository.findBySysId(sysId);
+
+		if (existingCredit.isEmpty()) {
+			throw new GenericEventException("There is no substitute credit with this id in the database: " + sysId,
+					HttpStatus.NOT_FOUND);
+		}
+
+		return new SubstituteCreditResponseDto(existingCredit.get());
 	}
 
 }

@@ -11,5 +11,7 @@ public interface SubstituteCreditService {
 	void createSubstituteCredit(Kid kid);
 	
 	List<SubstituteCreditResponseDto> fetchAllSubstituteCredit();
+	
+	SubstituteCreditResponseDto fetchSubstituteCreditBySysId(long sysId);
 
 }
