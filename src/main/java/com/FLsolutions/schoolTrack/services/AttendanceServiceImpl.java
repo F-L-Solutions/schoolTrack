@@ -155,6 +155,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 				// if cancelled at least 24h before the event, substitute credit is granted (the
 				// time can be changed in Attendance model)
 				attendance.setAttendanceStatus(AttendanceStatus.CANCELED_ON_TIME);
+				attendance.setExcused(true);
 				attendanceRepository.save(attendance);
 
 				substituteCreditService.createSubstituteCredit(attendance.getKid());
