@@ -1,8 +1,12 @@
 package com.FLsolutions.schoolTrack.services;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -15,6 +19,7 @@ import com.FLsolutions.schoolTrack.exceptions.GenericAttendanceException;
 import com.FLsolutions.schoolTrack.exceptions.GenericEventException;
 import com.FLsolutions.schoolTrack.exceptions.KidNotFoundException;
 import com.FLsolutions.schoolTrack.models.Attendance;
+import com.FLsolutions.schoolTrack.models.AttendanceDay;
 import com.FLsolutions.schoolTrack.models.AttendanceStatus;
 import com.FLsolutions.schoolTrack.models.Event;
 import com.FLsolutions.schoolTrack.models.Kid;
@@ -75,9 +80,59 @@ public class AttendanceServiceImpl implements AttendanceService {
 		return response;
 	}
 
-	public StatusResponseDto bulkCreateAttendances(AttendanceCreationRequestDto dto) {
-		StatusResponseDto response = new StatusResponseDto("");
-		return response;
+	public StatusResponseDto bulkCreateAttendances(AttendanceCreationRequestDto request) {
+	    StatusResponseDto response = new StatusResponseDto("");
+	    List<Attendance> attendances = new ArrayList<>();
+
+	    Kid kid = kidRepository.findByUserName(request.getKidUserName())
+	            .orElseThrow(() -> new KidNotFoundException("Selected kid username was not found in the database",
+	                    HttpStatus.NOT_FOUND));
+
+	    LocalDate currentDate = request.getStartDate();
+	    
+	    Set<DayOfWeek> attendanceDaysOfWeek = request.getAttendanceDays().stream()
+	            .map(AttendanceDay::getDayOfWeek)
+	            .collect(Collectors.toSet());
+	    
+	    while (!currentDate.isAfter(request.getEndDate())) {
+	        if (attendanceDaysOfWeek.contains(currentDate.getDayOfWeek())) {
+	            LocalDate finalCurrentDate = currentDate;
+	            Optional<Attendance> existingAttendance = attendanceRepository.findByKidIdAndDate(kid.getSysId(),
+	                    currentDate);
+	            
+	            if (existingAttendance.isPresent()) {
+	                throw new DuplicateAttendanceException("Selected kid already has attendance for " + currentDate,
+	                        HttpStatus.CONFLICT);
+	            }
+
+	            Event existingEvent = eventRepository.findByDate(currentDate)
+	                    .orElseThrow(() -> new GenericEventException(
+	                            "For selected date " + finalCurrentDate.toString() + " there was no event found in database",
+	                            HttpStatus.NOT_FOUND));
+
+	            if (existingEvent.getAvailableSpots() == 0) {
+	                throw new GenericEventException(
+	                        "For selected date " + currentDate + " there are no more spots available",
+	                        HttpStatus.BAD_REQUEST);
+	            }
+
+	            // Decrease available spots in event by 1
+	            int newlyAvailableSpots = existingEvent.getAvailableSpots() - 1;
+	            existingEvent.setAvailableSpots(newlyAvailableSpots);
+	            eventRepository.save(existingEvent);
+
+	            // Create new attendance
+	            Attendance attendance = new Attendance(currentDate, request.getDayType(), kid);
+	            attendances.add(attendance);
+	        }
+	        currentDate = currentDate.plusDays(1);
+	    }
+	    
+	    // Save all attendances
+	    attendanceRepository.saveAll(attendances);
+
+	    response.setStatus(attendances.size() + " attendances were created for " + request.getKidUserName());
+	    return response;
 	}
 
 	public StatusResponseDto cancelAttendance(Long attendanceId) {
@@ -101,6 +156,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 				// if cancelled at least 24h before the event, substitute credit is granted (the
 				// time can be changed in Attendance model)
 				attendance.setAttendanceStatus(AttendanceStatus.CANCELED_ON_TIME);
+				attendance.setExcused(true);
 				attendanceRepository.save(attendance);
 
 				substituteCreditService.createSubstituteCredit(attendance.getKid());
