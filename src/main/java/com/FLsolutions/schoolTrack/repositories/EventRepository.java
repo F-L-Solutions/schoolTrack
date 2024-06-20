@@ -13,7 +13,7 @@ import com.FLsolutions.schoolTrack.models.Event;
 @Repository
 public interface EventRepository extends JpaRepository<Event, Long> {
 
-	@Query("SELECT e FROM Event e WHERE e.date = :date AND TYPE(e) = Event")
+	@Query("SELECT e FROM Event e WHERE e.date = :date AND TYPE(e) = Event") 
 	Optional<Event> findByDate(@Param("date") LocalDate date);
 
 	@Query("SELECT e FROM Event e WHERE e.date BETWEEN :startDate AND :endDate AND e.class = Event")
