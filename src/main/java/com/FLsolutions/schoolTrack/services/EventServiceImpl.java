@@ -12,6 +12,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,7 +27,7 @@ public class EventServiceImpl implements EventService {
 	public EventServiceImpl(EventRepository eventRepository) {
 		this.eventRepository = eventRepository;
 	}
-	
+
 	@Override
 	public StatusResponseDto bulkCreateEvents(EventCreationRequestDto request) {
 		StatusResponseDto responseDto = new StatusResponseDto("");
@@ -57,7 +58,7 @@ public class EventServiceImpl implements EventService {
 
 		return responseDto;
 	}
-	
+
 	private List<LocalDate> checkExistingEvents(LocalDate generationStartDate, LocalDate generationEndDate) {
 		LocalDate currentDate = generationStartDate;
 		List<Event> existingEvents = eventRepository.findAllByDateBetween(generationStartDate, generationEndDate);
@@ -91,7 +92,17 @@ public class EventServiceImpl implements EventService {
 		}
 
 		existingEvents.forEach(event -> eventList.add(new EventResponseDto(event)));
-		
+
 		return eventList;
+	}
+
+	@Override
+	public EventResponseDto fetchBySysId(Long sysId) {
+		
+		Event event = eventRepository.findEventById(sysId).orElseThrow(
+				() -> new GenericEventException("Event with this id was not found in the database.", HttpStatus.NOT_FOUND));
+		
+		EventResponseDto eventResponse = new EventResponseDto(event);
+		return eventResponse;
 	}
 }

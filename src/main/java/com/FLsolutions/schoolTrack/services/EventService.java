@@ -12,4 +12,6 @@ public interface EventService {
 	
 	List<EventResponseDto> fetchAllEvents();
 	
+	EventResponseDto fetchBySysId(Long sysId);
+	
 }
