@@ -35,8 +35,9 @@ public class ReservationResponseDto implements ResponseDto {
 		return dayType;
 	}
 
-	public Kid getKid() {
-		return kid;
+	public KidResponseDto getKid() {
+		KidResponseDto kidResponseDto = new KidResponseDto(kid);
+		return kidResponseDto;
 	}
 
 	public ReservationStatus getStatus() {

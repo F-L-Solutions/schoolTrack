@@ -6,9 +6,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.FLsolutions.schoolTrack.dtos.ReservationCreationRequestDto;
+import com.FLsolutions.schoolTrack.dtos.ReservationResponseDto;
 import com.FLsolutions.schoolTrack.dtos.StatusResponseDto;
 import com.FLsolutions.schoolTrack.exceptions.DuplicateReservationException;
 import com.FLsolutions.schoolTrack.exceptions.GenericEventException;
+import com.FLsolutions.schoolTrack.exceptions.GenericReservationException;
 import com.FLsolutions.schoolTrack.exceptions.KidNotFoundException;
 import com.FLsolutions.schoolTrack.models.Event;
 import com.FLsolutions.schoolTrack.models.Kid;
@@ -30,7 +32,7 @@ public class ReservationServiceImpl implements ReservationService {
 		this.kidRepository = kidRepository;
 		this.eventRepository = eventRepository;
 	}
-	
+
 	@Override
 	public StatusResponseDto createReservation(ReservationCreationRequestDto request) {
 		StatusResponseDto response = new StatusResponseDto("");
@@ -61,5 +63,15 @@ public class ReservationServiceImpl implements ReservationService {
 		response.setStatus("Reservation for " + request.getKidUserName() + " was created.");
 
 		return response;
+	}
+
+	@Override
+	public ReservationResponseDto fetchReservationBySysId(Long id) {
+
+		Reservation reservation = reservationRepository.findById(id).orElseThrow(() -> new GenericReservationException(
+				"Reservation with this id was not found in the database.", HttpStatus.NOT_FOUND));
+
+		ReservationResponseDto reservationResponse = new ReservationResponseDto(reservation);
+		return reservationResponse;
 	}
 }
