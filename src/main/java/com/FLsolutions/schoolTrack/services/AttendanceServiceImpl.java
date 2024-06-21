@@ -80,61 +80,59 @@ public class AttendanceServiceImpl implements AttendanceService {
 
 		return response;
 	}
-	
+
 	@Override
 	public StatusResponseDto bulkCreateAttendances(AttendanceCreationRequestDto request) {
-	    StatusResponseDto response = new StatusResponseDto("");
-	    List<Attendance> attendances = new ArrayList<>();
+		StatusResponseDto response = new StatusResponseDto("");
+		List<Attendance> attendances = new ArrayList<>();
 
-	    Kid kid = kidRepository.findByUserName(request.getKidUserName())
-	            .orElseThrow(() -> new KidNotFoundException("Selected kid username was not found in the database",
-	                    HttpStatus.NOT_FOUND));
+		Kid kid = kidRepository.findByUserName(request.getKidUserName())
+				.orElseThrow(() -> new KidNotFoundException("Selected kid username was not found in the database",
+						HttpStatus.NOT_FOUND));
 
-	    LocalDate currentDate = request.getStartDate();
-	    
-	    Set<DayOfWeek> attendanceDaysOfWeek = request.getAttendanceDays().stream()
-	            .map(AttendanceDay::getDayOfWeek)
-	            .collect(Collectors.toSet());
-	    
-	    while (!currentDate.isAfter(request.getEndDate())) {
-	        if (attendanceDaysOfWeek.contains(currentDate.getDayOfWeek())) {
-	            LocalDate finalCurrentDate = currentDate;
-	            Optional<Attendance> existingAttendance = attendanceRepository.findByKidIdAndDate(kid.getSysId(),
-	                    currentDate);
-	            
-	            if (existingAttendance.isPresent()) {
-	                throw new DuplicateAttendanceException("Selected kid already has attendance for " + currentDate,
-	                        HttpStatus.CONFLICT);
-	            }
+		LocalDate currentDate = request.getStartDate();
 
-	            Event existingEvent = eventRepository.findByDate(currentDate)
-	                    .orElseThrow(() -> new GenericEventException(
-	                            "For selected date " + finalCurrentDate.toString() + " there was no event found in database",
-	                            HttpStatus.NOT_FOUND));
+		Set<DayOfWeek> attendanceDaysOfWeek = request.getAttendanceDays().stream().map(AttendanceDay::getDayOfWeek)
+				.collect(Collectors.toSet());
 
-	            if (existingEvent.getAvailableSpots() == 0) {
-	                throw new GenericEventException(
-	                        "For selected date " + currentDate + " there are no more spots available",
-	                        HttpStatus.BAD_REQUEST);
-	            }
+		while (!currentDate.isAfter(request.getEndDate())) {
+			if (attendanceDaysOfWeek.contains(currentDate.getDayOfWeek())) {
+				LocalDate finalCurrentDate = currentDate;
+				Optional<Attendance> existingAttendance = attendanceRepository.findByKidIdAndDate(kid.getSysId(),
+						currentDate);
 
-	            // Decrease available spots in event by 1
-	            int newlyAvailableSpots = existingEvent.getAvailableSpots() - 1;
-	            existingEvent.setAvailableSpots(newlyAvailableSpots);
-	            eventRepository.save(existingEvent);
+				if (existingAttendance.isPresent()) {
+					throw new DuplicateAttendanceException("Selected kid already has attendance for " + currentDate,
+							HttpStatus.CONFLICT);
+				}
 
-	            // Create new attendance
-	            Attendance attendance = new Attendance(currentDate, request.getDayType(), kid);
-	            attendances.add(attendance);
-	        }
-	        currentDate = currentDate.plusDays(1);
-	    }
-	    
-	    // Save all attendances
-	    attendanceRepository.saveAll(attendances);
+				Event existingEvent = eventRepository.findByDate(currentDate)
+						.orElseThrow(() -> new GenericEventException("For selected date " + finalCurrentDate.toString()
+								+ " there was no event found in database", HttpStatus.NOT_FOUND));
 
-	    response.setStatus(attendances.size() + " attendances were created for " + request.getKidUserName());
-	    return response;
+				if (existingEvent.getAvailableSpots() == 0) {
+					throw new GenericEventException(
+							"For selected date " + currentDate + " there are no more spots available",
+							HttpStatus.BAD_REQUEST);
+				}
+
+				// Decrease available spots in event by 1
+				int newlyAvailableSpots = existingEvent.getAvailableSpots() - 1;
+				existingEvent.setAvailableSpots(newlyAvailableSpots);
+				eventRepository.save(existingEvent);
+
+				// Create new attendance
+				Attendance attendance = new Attendance(currentDate, request.getDayType(), kid);
+				attendances.add(attendance);
+			}
+			currentDate = currentDate.plusDays(1);
+		}
+
+		// Save all attendances
+		attendanceRepository.saveAll(attendances);
+
+		response.setStatus(attendances.size() + " attendances were created for " + request.getKidUserName());
+		return response;
 	}
 
 	@Override
@@ -197,5 +195,15 @@ public class AttendanceServiceImpl implements AttendanceService {
 			throw new GenericEventException("There are no attendances for kid with id: " + sysId, HttpStatus.NOT_FOUND);
 		}
 		return responseList;
+	}
+
+	@Override
+	public AttendanceResponseDto fetchAttendanceBySysId(Long sysId) {
+
+		Attendance attendance = attendanceRepository.findById(sysId).orElseThrow(() -> new GenericAttendanceException(
+				"Attendance with this id was not found in the database.", HttpStatus.NOT_FOUND));
+
+		AttendanceResponseDto attendanceResponse = new AttendanceResponseDto(attendance);
+		return attendanceResponse;
 	}
 }

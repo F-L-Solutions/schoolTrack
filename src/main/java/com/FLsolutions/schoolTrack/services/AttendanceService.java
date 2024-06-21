@@ -17,5 +17,7 @@ public interface AttendanceService {
 	List<AttendanceResponseDto> fetchAllAttendances();
 	
 	List<AttendanceResponseDto> fetchAttendanceByKidSysId(Long sysId);
+	
+	AttendanceResponseDto fetchAttendanceBySysId(Long sysId);
 
 }
