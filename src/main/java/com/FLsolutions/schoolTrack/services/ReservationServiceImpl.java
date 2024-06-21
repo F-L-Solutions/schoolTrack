@@ -30,7 +30,8 @@ public class ReservationServiceImpl implements ReservationService {
 		this.kidRepository = kidRepository;
 		this.eventRepository = eventRepository;
 	}
-
+	
+	@Override
 	public StatusResponseDto createReservation(ReservationCreationRequestDto request) {
 		StatusResponseDto response = new StatusResponseDto("");
 

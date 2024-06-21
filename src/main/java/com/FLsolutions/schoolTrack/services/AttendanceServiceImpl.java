@@ -43,6 +43,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 		this.substituteCreditService = substituteCreditService;
 	}
 
+	@Override
 	public StatusResponseDto createAttendance(AttendanceCreationRequestDto request) {
 		StatusResponseDto response = new StatusResponseDto("");
 
@@ -79,7 +80,8 @@ public class AttendanceServiceImpl implements AttendanceService {
 
 		return response;
 	}
-
+	
+	@Override
 	public StatusResponseDto bulkCreateAttendances(AttendanceCreationRequestDto request) {
 	    StatusResponseDto response = new StatusResponseDto("");
 	    List<Attendance> attendances = new ArrayList<>();
@@ -135,6 +137,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 	    return response;
 	}
 
+	@Override
 	public StatusResponseDto cancelAttendance(Long attendanceId) {
 		StatusResponseDto response = new StatusResponseDto("");
 

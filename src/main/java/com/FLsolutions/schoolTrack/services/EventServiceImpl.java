@@ -26,7 +26,8 @@ public class EventServiceImpl implements EventService {
 	public EventServiceImpl(EventRepository eventRepository) {
 		this.eventRepository = eventRepository;
 	}
-
+	
+	@Override
 	public StatusResponseDto bulkCreateEvents(EventCreationRequestDto request) {
 		StatusResponseDto responseDto = new StatusResponseDto("");
 
@@ -56,7 +57,7 @@ public class EventServiceImpl implements EventService {
 
 		return responseDto;
 	}
-
+	
 	private List<LocalDate> checkExistingEvents(LocalDate generationStartDate, LocalDate generationEndDate) {
 		LocalDate currentDate = generationStartDate;
 		List<Event> existingEvents = eventRepository.findAllByDateBetween(generationStartDate, generationEndDate);

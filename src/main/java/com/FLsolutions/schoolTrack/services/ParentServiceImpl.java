@@ -26,7 +26,8 @@ public class ParentServiceImpl implements ParentService {
 	public ParentServiceImpl(ParentRepository parentRepository) {
 		this.parentRepository = parentRepository;
 	}
-
+	
+	@Override
 	public StatusResponseDto createParent(ParentCreationRequestDto requestDto) {
 		StatusResponseDto responseDto = new StatusResponseDto("");
 		String username = requestDto.getFirstName() + requestDto.getLastName();

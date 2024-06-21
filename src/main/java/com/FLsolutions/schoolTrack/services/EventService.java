@@ -11,5 +11,5 @@ public interface EventService {
 	StatusResponseDto bulkCreateEvents(EventCreationRequestDto dto);
 	
 	List<EventResponseDto> fetchAllEvents();
-
+	
 }
