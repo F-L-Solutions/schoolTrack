@@ -1,6 +1,7 @@
 package com.FLsolutions.schoolTrack.repositories;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,4 +17,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 	@Query("SELECT r FROM Reservation r WHERE r.kid.sysId = :kidId AND r.date = :date AND TYPE(r) = Reservation")
 	Optional<Reservation> findByKidIdAndDate(@Param("kidId") Long kidId, @Param("date") LocalDate date);
 
+	@Query("SELECT r FROM Reservation r WHERE r.kid.sysId = :kidId AND TYPE(r) = Reservation")
+	Optional<List<Reservation>> findByKidSysId(@Param("kidId") Long kidId);
 }

@@ -14,4 +14,6 @@ public interface ReservationService {
 
 	List<ReservationResponseDto> fetchAllReservations();
 
+	List<ReservationResponseDto> fetchReservationsByKidSysId(Long id);
+
 }

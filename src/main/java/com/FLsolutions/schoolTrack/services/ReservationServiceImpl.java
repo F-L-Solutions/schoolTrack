@@ -7,7 +7,6 @@ import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.FLsolutions.schoolTrack.dtos.AttendanceResponseDto;
 import com.FLsolutions.schoolTrack.dtos.ReservationCreationRequestDto;
 import com.FLsolutions.schoolTrack.dtos.ReservationResponseDto;
 import com.FLsolutions.schoolTrack.dtos.StatusResponseDto;
@@ -88,6 +87,25 @@ public class ReservationServiceImpl implements ReservationService {
 		}
 
 		reservations.forEach(reservation -> reservationsResponse.add(new ReservationResponseDto(reservation)));
+		return reservationsResponse;
+	}
+
+	@Override
+	public List<ReservationResponseDto> fetchReservationsByKidSysId(Long id) {
+		Optional<List<Reservation>> reservations = reservationRepository.findByKidSysId(id);
+		List<ReservationResponseDto> reservationsResponse = new ArrayList<ReservationResponseDto>();
+
+		if (reservations.isEmpty()) {
+			throw new GenericReservationException(
+					"There are no reservations for kid with id " + id + " in the database", HttpStatus.NOT_FOUND);
+		}
+		
+		reservations.get().forEach(reservation -> reservationsResponse.add(new ReservationResponseDto(reservation)));
+		if (reservationsResponse.isEmpty()) {
+			throw new GenericReservationException(
+					"There are no reservations for kid with id " + id + " in the database", HttpStatus.NOT_FOUND);
+		}
+
 		return reservationsResponse;
 	}
 }
