@@ -1,10 +1,13 @@
 package com.FLsolutions.schoolTrack.services;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.FLsolutions.schoolTrack.dtos.AttendanceResponseDto;
 import com.FLsolutions.schoolTrack.dtos.ReservationCreationRequestDto;
 import com.FLsolutions.schoolTrack.dtos.ReservationResponseDto;
 import com.FLsolutions.schoolTrack.dtos.StatusResponseDto;
@@ -73,5 +76,18 @@ public class ReservationServiceImpl implements ReservationService {
 
 		ReservationResponseDto reservationResponse = new ReservationResponseDto(reservation);
 		return reservationResponse;
+	}
+
+	@Override
+	public List<ReservationResponseDto> fetchAllReservations() {
+		List<ReservationResponseDto> reservationsResponse = new ArrayList<ReservationResponseDto>();
+		List<Reservation> reservations = reservationRepository.findAll();
+
+		if (reservations.isEmpty()) {
+			throw new GenericReservationException("There are no reservations in the database", HttpStatus.NOT_FOUND);
+		}
+
+		reservations.forEach(reservation -> reservationsResponse.add(new ReservationResponseDto(reservation)));
+		return reservationsResponse;
 	}
 }
