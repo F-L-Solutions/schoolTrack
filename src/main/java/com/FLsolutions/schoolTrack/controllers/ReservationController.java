@@ -1,5 +1,7 @@
 package com.FLsolutions.schoolTrack.controllers;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -29,11 +31,17 @@ public class ReservationController {
 		StatusResponseDto response = reservationService.createReservation(dto);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/{id}")
-	public ResponseEntity<ReservationResponseDto> getReservationBySysId(@PathVariable("id") Long id){
+	public ResponseEntity<ReservationResponseDto> getReservationBySysId(@PathVariable("id") Long id) {
 		ReservationResponseDto response = reservationService.fetchReservationBySysId(id);
 		return new ResponseEntity<ReservationResponseDto>(response, HttpStatus.OK);
+	}
+
+	@GetMapping("")
+	public ResponseEntity<List<ReservationResponseDto>> getAllReservations() {
+		List<ReservationResponseDto> response = reservationService.fetchAllReservations();
+		return new ResponseEntity<List<ReservationResponseDto>>(response, HttpStatus.OK);
 	}
 
 }
