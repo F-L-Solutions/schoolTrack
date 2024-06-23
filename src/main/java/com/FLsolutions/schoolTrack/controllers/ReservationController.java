@@ -44,4 +44,10 @@ public class ReservationController {
 		return new ResponseEntity<List<ReservationResponseDto>>(response, HttpStatus.OK);
 	}
 
+	@GetMapping("/kid/{id}")
+	public ResponseEntity<List<ReservationResponseDto>> getReservationsByKidId(@PathVariable("id") Long id) {
+		List<ReservationResponseDto> response = reservationService.fetchReservationsByKidSysId(id);
+		return new ResponseEntity<List<ReservationResponseDto>>(response, HttpStatus.OK);
+	}
+
 }
