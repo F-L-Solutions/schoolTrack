@@ -85,6 +85,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 	public StatusResponseDto bulkCreateAttendances(AttendanceCreationRequestDto request) {
 		StatusResponseDto response = new StatusResponseDto("");
 		List<Attendance> attendances = new ArrayList<>();
+		ArrayList<Event> existingEvents = new ArrayList<>();
 
 		Kid kid = kidRepository.findByUserName(request.getKidUserName())
 				.orElseThrow(() -> new KidNotFoundException("Selected kid username was not found in the database",
@@ -116,10 +117,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 							HttpStatus.BAD_REQUEST);
 				}
 
-				// Decrease available spots in event by 1
-				int newlyAvailableSpots = existingEvent.getAvailableSpots() - 1;
-				existingEvent.setAvailableSpots(newlyAvailableSpots);
-				eventRepository.save(existingEvent);
+				existingEvents.add(existingEvent);
 
 				// Create new attendance
 				Attendance attendance = new Attendance(currentDate, request.getDayType(), kid);
@@ -130,6 +128,14 @@ public class AttendanceServiceImpl implements AttendanceService {
 
 		// Save all attendances
 		attendanceRepository.saveAll(attendances);
+
+		// Decrease available spots in all events by 1
+		for (int x = 0; x < existingEvents.size(); x++) {
+			Event event = existingEvents.get(x);
+			int newlyAvailableSpots = event.getAvailableSpots() - 1;
+			event.setAvailableSpots(newlyAvailableSpots);
+			eventRepository.save(event);
+		}
 
 		response.setStatus(attendances.size() + " attendances were created for " + request.getKidUserName());
 		return response;
