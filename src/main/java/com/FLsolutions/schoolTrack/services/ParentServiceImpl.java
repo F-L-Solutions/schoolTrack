@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.FLsolutions.schoolTrack.dtos.KidCreationRequestDto;
 import com.FLsolutions.schoolTrack.dtos.KidResponseDto;
 import com.FLsolutions.schoolTrack.dtos.ParentCreationRequestDto;
 import com.FLsolutions.schoolTrack.dtos.ParentResponseDto;
@@ -22,11 +23,13 @@ import com.FLsolutions.schoolTrack.repositories.ParentRepository;
 public class ParentServiceImpl implements ParentService {
 
 	private ParentRepository parentRepository;
+	private KidService kidService;
 
-	public ParentServiceImpl(ParentRepository parentRepository) {
+	public ParentServiceImpl(ParentRepository parentRepository, KidService kidService) {
 		this.parentRepository = parentRepository;
+		this.kidService = kidService;
 	}
-	
+
 	@Override
 	public StatusResponseDto createParent(ParentCreationRequestDto requestDto) {
 		StatusResponseDto responseDto = new StatusResponseDto("");
@@ -43,7 +46,25 @@ public class ParentServiceImpl implements ParentService {
 		Parent parent = new Parent(requestDto.getFirstName(), requestDto.getLastName(), requestDto.getTelNumber(),
 				requestDto.getEmail());
 		parentRepository.save(parent);
-		responseDto.setStatus("Parent was created");
+		responseDto.setStatus("Parent " + requestDto.getFirstName() + " " + requestDto.getLastName() + " was created");
+
+		// if there are kids in the DTO, create also kids
+		if (!requestDto.getKids().isEmpty()) {
+			List<KidCreationRequestDto> kidDtos = requestDto.getKids();
+			StringBuilder kidNames = new StringBuilder();
+
+			for (int x = 0; x < kidDtos.size(); x++) {
+				KidCreationRequestDto kidDto = kidDtos.get(x);
+				kidDto.setParentSysId(parent.getSysId());
+				kidService.createKid(kidDto);
+				if (x > 0) {
+					kidNames.append(", ");
+				}
+				kidNames.append(kidDto.getFirstName());
+			}
+			responseDto.setStatus("Parent " + requestDto.getFirstName() + " " + requestDto.getLastName()
+					+ " was created with kid " + kidNames.toString());
+		}
 
 		return responseDto;
 	}
@@ -75,8 +96,8 @@ public class ParentServiceImpl implements ParentService {
 		}
 
 		existingParents.get().forEach(parent -> responseList.add(new ParentResponseDto(parent)));
-		
-		if(responseList.isEmpty()) {
+
+		if (responseList.isEmpty()) {
 			throw new GenericUserException("No parents for this kid id found: " + sysId, HttpStatus.NOT_FOUND);
 		}
 
