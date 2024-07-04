@@ -4,12 +4,14 @@ import java.util.List;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 public class ParentCreationRequestDto extends UserCreationRequestDto {
 
 	private List<KidCreationRequestDto> kids;
 
-	// @NotBlank(message = "Telephone number is mandatory")
+	@Pattern(regexp = "^[+]?[0-9]{10,15}$", message = "Telephone number should have a valid format")
 	private String telNumber;
 
 	@Email(message = "Email should be valid")
@@ -24,7 +26,14 @@ public class ParentCreationRequestDto extends UserCreationRequestDto {
 		super(firstName, lastName);
 		this.telNumber = telNumber;
 		this.email = email;
-		// this.kids= kids;
+	}
+
+	public ParentCreationRequestDto(String firstName, String lastName, String telNumber, String email,
+			List<KidCreationRequestDto> kids) {
+		super(firstName, lastName);
+		this.telNumber = telNumber;
+		this.email = email;
+		this.kids = kids;
 	}
 
 	public List<KidCreationRequestDto> getKids() {
