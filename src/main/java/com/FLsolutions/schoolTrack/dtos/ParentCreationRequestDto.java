@@ -11,7 +11,7 @@ public class ParentCreationRequestDto extends UserCreationRequestDto {
 
 	private List<KidCreationRequestDto> kids;
 
-	@Pattern(regexp = "^[+]?[0-9]{10,15}$", message = "Telephone number should have a valid format")
+	@Pattern(regexp = "^[+]?[0-9]{9,15}$", message = "Telephone number should have a valid format")
 	private String telNumber;
 
 	@Email(message = "Email should be valid")
