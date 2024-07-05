@@ -61,8 +61,8 @@ class ParentControllerUnitTest {
             .andExpect(jsonPath("$[0].sysId", is(1)))
             .andExpect(jsonPath("$[0].firstName", is("Parent")))
             .andExpect(jsonPath("$[0].lastName", is("One")))
-            .andExpect(jsonPath("$[0].sysId", is(2)))
-            .andExpect(jsonPath("$[0].firstName", is("Parent")))
-            .andExpect(jsonPath("$[0].lastName", is("Two")));
+            .andExpect(jsonPath("$[1].sysId", is(2)))
+            .andExpect(jsonPath("$[1].firstName", is("Parent")))
+            .andExpect(jsonPath("$[1].lastName", is("Two")));
     }
 }
