@@ -109,4 +109,10 @@ public class User {
 		this.password = password;
 	}
 
+	public void setSysId(Long sysId) {
+		this.sysId = sysId;
+	}
+	
+	
+
 }
