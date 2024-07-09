@@ -43,7 +43,6 @@ public class Event {
 		this.date = date;
 		this.dayType = dayType;
 	}
-
 	
 	public long getSysId() {
 		return sysId;
@@ -61,6 +60,10 @@ public class Event {
 		return date;
 	}
 
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+	
 	public void setDayType(DayType dayType) {
 		this.dayType = dayType;
 	}
@@ -71,5 +74,13 @@ public class Event {
 
 	public void setDate(LocalDate date) {
 		this.date = date;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public void setSysId(long sysId) {
+		this.sysId = sysId;
 	}
 }
