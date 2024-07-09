@@ -15,7 +15,7 @@ public class EventCreationRequestDto {
 		
 	}
 
-	public EventCreationRequestDto(int availableSpots, DayType dayType, int numberOfEvents, LocalDate startDate, LocalDate endDate) {
+	public EventCreationRequestDto(int availableSpots, DayType dayType, LocalDate startDate, LocalDate endDate) {
 		this.availableSpots = availableSpots;
 		this.dayType = dayType;
 		this.startDate= startDate;
