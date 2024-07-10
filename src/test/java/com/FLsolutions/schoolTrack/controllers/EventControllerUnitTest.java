@@ -138,11 +138,12 @@ public class EventControllerUnitTest {
 				.andExpect(status().isNotFound())
 				.andExpect(jsonPath("$.message", is("Validation Failed")));
 	}
-	
+
 	@Test
 	void create_events_in_bulk_with_duplicate_entries_shows_error() throws Exception {
-		Mockito.when(eventService.bulkCreateEvents(Mockito.any())).thenThrow(new DuplicateEventException(Mockito.any(), HttpStatus.CONFLICT));
-		
+		Mockito.when(eventService.bulkCreateEvents(Mockito.any()))
+				.thenThrow(new DuplicateEventException(Mockito.any(), HttpStatus.CONFLICT));
+
 		mockMvc.perform(MockMvcRequestBuilders.post("/events/bulk-create")
 				.content(objectMapper.writeValueAsString(eventCreationRequestDto))
 				.contentType(MediaType.APPLICATION_JSON))
@@ -150,16 +151,17 @@ public class EventControllerUnitTest {
 				.andExpect(jsonPath("$.message", is("Validation Failed")))
 				.andExpect(jsonPath("$.status", is(409)));
 	}
-	
+
 	@Test
 	void create_events_with_start_date_past_end_date_shows_error() throws Exception {
-		Mockito.when(eventService.bulkCreateEvents(Mockito.any())).thenThrow(new GenericEventException("Validation Failed", HttpStatus.BAD_REQUEST));
-	
-				mockMvc.perform(MockMvcRequestBuilders.post("/events/bulk-create")
-						.content(objectMapper.writeValueAsString(eventCreationRequestDto))
-						.contentType(MediaType.APPLICATION_JSON))
-						.andExpect(status().isBadRequest())
-						.andExpect(jsonPath("$.status", is(400)));
+		Mockito.when(eventService.bulkCreateEvents(Mockito.any()))
+				.thenThrow(new GenericEventException("Validation Failed", HttpStatus.BAD_REQUEST));
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/events/bulk-create")
+				.content(objectMapper.writeValueAsString(eventCreationRequestDto))
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.status", is(400)));
 	}
 
 }
