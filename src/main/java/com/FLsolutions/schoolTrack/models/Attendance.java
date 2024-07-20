@@ -23,15 +23,15 @@ public class Attendance extends Event {
 	@JoinColumn(name = "kid_id")
 	private Kid kid;
 
-	@Column(name= "attendance_status", length = 25)
+	@Column(name = "attendance_status", length = 25)
 	@Enumerated(EnumType.STRING)
 	private AttendanceStatus attendanceStatus;
 
-	@Column(name= "attendance_day")
+	@Column(name = "attendance_day")
 	@Enumerated(EnumType.STRING)
 	private AttendanceDay attendanceDay;
 
-	@Column(name= "is_excused")
+	@Column(name = "is_excused")
 	private boolean isExcused;
 
 	public Attendance() {
@@ -40,6 +40,9 @@ public class Attendance extends Event {
 
 	public Attendance(LocalDate date, DayType dayType, Kid kid, AttendanceStatus attendanceStatus) {
 		super(date, dayType);
+		if (isWeekend(date)) {
+			throw new IllegalArgumentException("Attendance cannot be created on weekends");
+		}
 		this.kid = kid;
 		this.attendanceStatus = attendanceStatus;
 		this.isExcused = false;
@@ -57,6 +60,9 @@ public class Attendance extends Event {
 
 	public Attendance(LocalDate date, DayType dayType, Kid kid) {
 		super(date, dayType);
+		if (isWeekend(date)) {
+			throw new IllegalArgumentException("Attendance cannot be created on weekends");
+		}
 		this.kid = kid;
 		this.attendanceStatus = AttendanceStatus.IDLE;
 		this.isExcused = false;
@@ -66,13 +72,14 @@ public class Attendance extends Event {
 	public boolean isCancelableOnTime() {
 		return LocalDateTime.now().isBefore(this.getDate().atStartOfDay().minusHours(24));
 	}
-	
+
 	public boolean isCancelable() {
 		return LocalDateTime.now().isBefore(this.getDate().atStartOfDay());
 	}
-	
+
 	public boolean isAlreadyCanceled() {
-		return this.attendanceStatus == AttendanceStatus.CANCELED_LATE || this.attendanceStatus == AttendanceStatus.CANCELED_ON_TIME;
+		return this.attendanceStatus == AttendanceStatus.CANCELED_LATE
+				|| this.attendanceStatus == AttendanceStatus.CANCELED_ON_TIME;
 	}
 
 	public Kid getKid() {
@@ -97,8 +104,9 @@ public class Attendance extends Event {
 
 	public void setAttendanceDay(LocalDate date) {
 		DayOfWeek dayOfWeek = date.getDayOfWeek();
-		AttendanceDay attendanceDay = AttendanceDay.valueOf(dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.ENGLISH).toString().toUpperCase());
-		
+		AttendanceDay attendanceDay = AttendanceDay
+				.valueOf(dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.ENGLISH).toString().toUpperCase());
+
 		this.attendanceDay = attendanceDay;
 	}
 
@@ -108,6 +116,11 @@ public class Attendance extends Event {
 
 	public void setExcused(boolean isExcused) {
 		this.isExcused = isExcused;
+	}
+
+	private boolean isWeekend(LocalDate date) {
+		DayOfWeek dayOfWeek = date.getDayOfWeek();
+		return dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY;
 	}
 
 }
