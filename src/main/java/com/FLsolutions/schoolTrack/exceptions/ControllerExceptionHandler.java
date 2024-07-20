@@ -72,4 +72,14 @@ public class ControllerExceptionHandler {
 				HttpStatus.CONFLICT.value());
 		return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
 	}
+	
+	@ExceptionHandler(IllegalArgumentException.class)
+	public ResponseEntity<ErrorResponseDto> handleIllegalArgumentException(IllegalArgumentException ex) {
+		List<String> details = new ArrayList<>();
+		details.add(ex.getMessage());
+		
+		ErrorResponseDto errorResponse = new ErrorResponseDto("Validation Failed, IllegalArgumentException", details,
+				HttpStatus.CONFLICT.value());
+		return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+	}
 }
