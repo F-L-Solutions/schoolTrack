@@ -22,39 +22,39 @@ import com.FLsolutions.schoolTrack.services.ParentService;
 @SpringBootTest(classes = SchoolTrackApplication.class)
 @TestPropertySource("classpath:application.properties")
 public class ParentServiceUnitTest {
-    
+
 	@MockBean
-    private ParentRepository parentRepository;
-    @Autowired
-    private ParentService parentService;
-    
+	private ParentRepository parentRepository;
+	@Autowired
+	private ParentService parentService;
+
 //    @BeforeEach
 //    void setUp() {
 //        this.parentRepository = Mockito.mock(ParentRepository.class);
 //        this.parentService = new ParentService(parentRepository); // Inject mocked repository
 //    }
-    
-    @Test
-    void can_get_all_parents() {
-        // Mock data
-        Parent parent1 = new Parent("Parent", "One", "parentone@example.com", "12345");
-        Parent parent2 = new Parent("Parent", "Two", "parenttwo@example.com", "12345");
-        parent1.setSysId(1L);
-        parent2.setSysId(2L);
-        
-        List<Parent> parentList = new ArrayList<>();
-        parentList.add(parent1);
-        parentList.add(parent2);
-        
-        // Mock behavior
-        Mockito.when(parentRepository.findAll()).thenReturn(parentList);
-        
-        // Test
-        List<ParentResponseDto> response = parentService.fetchAllParents();
-        
-        // Assert
-        assertNotNull(response);
-        assertEquals(1, response.get(0).getSysId());
-        assertEquals(2, response.get(1).getSysId());
-    }
+
+	@Test
+	void getAllParents_returnsListOfParents() {
+		// Mock data
+		Parent parent1 = new Parent("Parent", "One", "parentone@example.com", "12345");
+		Parent parent2 = new Parent("Parent", "Two", "parenttwo@example.com", "12345");
+		parent1.setSysId(1L);
+		parent2.setSysId(2L);
+
+		List<Parent> parentList = new ArrayList<>();
+		parentList.add(parent1);
+		parentList.add(parent2);
+
+		// Mock behavior
+		Mockito.when(parentRepository.findAll()).thenReturn(parentList);
+
+		// Test
+		List<ParentResponseDto> response = parentService.fetchAllParents();
+
+		// Assert
+		assertNotNull(response);
+		assertEquals(1, response.get(0).getSysId());
+		assertEquals(2, response.get(1).getSysId());
+	}
 }

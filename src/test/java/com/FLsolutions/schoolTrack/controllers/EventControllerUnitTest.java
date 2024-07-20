@@ -72,7 +72,7 @@ public class EventControllerUnitTest {
 	}
 
 	@Test
-	void can_create_events_in_bulk() throws Exception {
+	void POST_bulkCreate_returnsOkStatus() throws Exception {
 		StatusResponseDto responseDto = new StatusResponseDto("ok");
 
 		Mockito.when(eventService.bulkCreateEvents(Mockito.any())).thenReturn(responseDto);
@@ -85,7 +85,7 @@ public class EventControllerUnitTest {
 	}
 
 	@Test
-	void can_get_all_events() throws Exception {
+	void GET_getAllEvents_returnsEventList() throws Exception {
 		Mockito.when(eventService.fetchAllEvents()).thenReturn(responseDtoList);
 
 		mockMvc.perform(MockMvcRequestBuilders.get("/events"))
@@ -101,7 +101,7 @@ public class EventControllerUnitTest {
 	}
 
 	@Test
-	void can_get_event_by_id() throws Exception {
+	void GET_getEventBySysId_returnsEvent() throws Exception {
 		Mockito.when(eventService.fetchBySysId(1L)).thenReturn(eventResponseDto1);
 
 		mockMvc.perform(MockMvcRequestBuilders.get("/events/1"))
@@ -113,7 +113,7 @@ public class EventControllerUnitTest {
 	}
 
 	@Test
-	void get_event_with_invalid_sysId_shows_error() throws Exception {
+	void GET_getEventBySysId_withInvalidId_returnsError() throws Exception {
 		Mockito.when(eventService.fetchBySysId(Mockito.anyLong()))
 				.thenThrow(new GenericEventException("Validation Failed", HttpStatus.NOT_FOUND));
 
@@ -123,14 +123,14 @@ public class EventControllerUnitTest {
 	}
 
 	@Test
-	void create_with_invalid_payload_shows_error() throws Exception {
+	void POST_bulkCreate_withInvalidPayload_returnsError() throws Exception {
 
 		mockMvc.perform(MockMvcRequestBuilders.post("/events/bulk-create").content("{\"invalid\": \"data\""))
 				.andExpect(status().isUnsupportedMediaType());
 	}
 
 	@Test
-	void get_all_events_when_no_events_exist_shows_error() throws Exception {
+	void GET_getAllEvents_whenNoEventsExist_returnsError() throws Exception {
 		Mockito.when(eventService.fetchAllEvents())
 				.thenThrow(new GenericEventException("Validation Failed", HttpStatus.NOT_FOUND));
 
@@ -140,7 +140,7 @@ public class EventControllerUnitTest {
 	}
 
 	@Test
-	void create_events_in_bulk_with_duplicate_entries_shows_error() throws Exception {
+	void POST_bulkCreate_withDuplicateEntries_returnsError() throws Exception {
 		Mockito.when(eventService.bulkCreateEvents(Mockito.any()))
 				.thenThrow(new DuplicateEventException(Mockito.any(), HttpStatus.CONFLICT));
 
@@ -153,7 +153,7 @@ public class EventControllerUnitTest {
 	}
 
 	@Test
-	void create_events_with_start_date_past_end_date_shows_error() throws Exception {
+	void POST_bulkCreate_withStartDatePastEndDate_returnsError() throws Exception {
 		Mockito.when(eventService.bulkCreateEvents(Mockito.any()))
 				.thenThrow(new GenericEventException("Validation Failed", HttpStatus.BAD_REQUEST));
 

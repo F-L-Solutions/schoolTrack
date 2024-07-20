@@ -22,7 +22,7 @@ public class AttendanceModelUnitTest {
 	}
 
 	@Test
-	public void testAttendanceConstructorWithStatus() {
+	public void testConstructor_withStatus_setsAllFieldsCorrectly() {
 		LocalDate date = LocalDate.of(2024, 7, 8); // A Monday
 		DayType dayType = DayType.FULL_DAY;
 		AttendanceStatus status = AttendanceStatus.IDLE;
@@ -38,7 +38,7 @@ public class AttendanceModelUnitTest {
 	}
 
 	@Test
-	public void testAttendanceConstructorWithoutStatus() {
+	public void testConstructor_withoutStatus_setsDefaultStatusAndAllFieldsCorrectly() {
 		LocalDate date = LocalDate.of(2024, 7, 8); // A Monday
 		DayType dayType = DayType.FULL_DAY;
 
@@ -53,7 +53,7 @@ public class AttendanceModelUnitTest {
 	}
 
 	@Test
-	public void testSetAttendanceDay() {
+	public void testSetAttendanceDay_setsCorrectDayBasedOnDate() {
 		Attendance attendance = new Attendance();
 		LocalDate date = LocalDate.of(2024, 7, 8); // A Monday
 
@@ -63,7 +63,7 @@ public class AttendanceModelUnitTest {
 	}
 
 	@Test
-	public void testIsCancelableOnTime() {
+	public void testIsCancelableOnTime_withFutureDate_returnsTrue() {
 		LocalDate date = LocalDate.now().plusDays(2);
 		if (isWeekend(date)) {
 			date = date.plusDays(2);
@@ -74,7 +74,7 @@ public class AttendanceModelUnitTest {
 	}
 
 	@Test
-	public void testIsCancelable() {
+	public void testIsCancelable_withFutureDate_returnsTrue() {
 		LocalDate date = LocalDate.now().plusDays(1);
 		if (isWeekend(date)) {
 			date = date.plusDays(2);
@@ -85,7 +85,7 @@ public class AttendanceModelUnitTest {
 	}
 
 	@Test
-	public void testIsAlreadyCanceled() {
+	public void testIsAlreadyCanceled_withCanceledStatus_returnsTrue() {
 		Attendance attendance = new Attendance();
 		attendance.setAttendanceStatus(AttendanceStatus.CANCELED_ON_TIME);
 
@@ -93,7 +93,7 @@ public class AttendanceModelUnitTest {
 	}
 
 	@Test
-	public void testSetAndGetKid() {
+	public void testSetAndGetKid_returnsCorrectKid() {
 		Attendance attendance = new Attendance();
 		attendance.setKid(mockKid);
 
@@ -101,7 +101,7 @@ public class AttendanceModelUnitTest {
 	}
 
 	@Test
-	public void testSetAndGetAttendanceStatus() {
+	public void testSetAndGetAttendanceStatus_returnsCorrectStatus() {
 		Attendance attendance = new Attendance();
 		attendance.setAttendanceStatus(AttendanceStatus.ABSENT);
 
@@ -109,7 +109,7 @@ public class AttendanceModelUnitTest {
 	}
 
 	@Test
-	public void testSetAndGetAttendanceDay() {
+	public void testSetAndGetAttendanceDay_returnsCorrectDay() {
 		Attendance attendance = new Attendance();
 		LocalDate date = LocalDate.of(2024, 7, 8); // A Monday
 
@@ -119,7 +119,7 @@ public class AttendanceModelUnitTest {
 	}
 
 	@Test
-	public void testIsAndSetExcused() {
+	public void testIsAndSetExcused_returnsTrueWhenSet() {
 		Attendance attendance = new Attendance();
 		attendance.setExcused(true);
 
@@ -127,7 +127,7 @@ public class AttendanceModelUnitTest {
 	}
 
 	@Test
-	public void testSetAttendanceDayFromDate() {
+	public void testSetAttendanceDayFromDate_setsCorrectDayBasedOnDate() {
 		Attendance attendance = new Attendance();
 		LocalDate date = LocalDate.of(2024, 7, 8); // A Monday
 
@@ -141,7 +141,7 @@ public class AttendanceModelUnitTest {
 	}
 
 	@Test
-	public void testIsCancelableOnTimeFalse() {
+	public void testIsCancelableOnTime_withPastDate_returnsFalse() {
 		LocalDate date = LocalDate.now().minusDays(1);
 		if (isWeekend(date)) {
 			date = date.minusDays(2);
@@ -152,7 +152,7 @@ public class AttendanceModelUnitTest {
 	}
 
 	@Test
-	public void testIsCancelableFalse() {
+	public void testIsCancelable_withPastDate_returnsFalse() {
 		LocalDate date = LocalDate.now().minusDays(1);
 		if (isWeekend(date)) {
 			date = date.minusDays(2);
@@ -163,7 +163,7 @@ public class AttendanceModelUnitTest {
 	}
 
 	@Test
-	public void testIsAlreadyCanceledFalse() {
+	public void testIsAlreadyCanceled_withNonCanceledStatus_returnsFalse() {
 		Attendance attendance = new Attendance();
 		attendance.setAttendanceStatus(AttendanceStatus.ATTENDED);
 
@@ -171,7 +171,7 @@ public class AttendanceModelUnitTest {
 	}
 
 	@Test
-	public void testCannotCreateAttendanceOnWeekend() {
+	public void testCreateAttendanceOnWeekend_throwsIllegalArgumentException() {
 		LocalDate sunday = LocalDate.of(2024, 6, 23); // A Sunday
 		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
 			new Attendance(sunday, DayType.FULL_DAY, mockKid);
@@ -180,7 +180,7 @@ public class AttendanceModelUnitTest {
 		assertEquals("Attendance cannot be created on weekends", exception.getMessage());
 	}
 
-	// method for checking if date is on weekend
+	// helper method for checking if date is on weekend
 	private boolean isWeekend(LocalDate date) {
 		DayOfWeek dayOfWeek = date.getDayOfWeek();
 		return dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY;
