@@ -98,10 +98,11 @@ public class EventServiceImpl implements EventService {
 
 	@Override
 	public EventResponseDto fetchBySysId(Long sysId) {
-		
-		Event event = eventRepository.findEventById(sysId).orElseThrow(
-				() -> new GenericEventException("Event with this id was not found in the database.", HttpStatus.NOT_FOUND));
-		
+
+		Event event = eventRepository.findEventById(sysId)
+				.orElseThrow(() -> new GenericEventException("Event with this id was not found in the database.",
+						HttpStatus.NOT_FOUND));
+
 		EventResponseDto eventResponse = new EventResponseDto(event);
 		return eventResponse;
 	}
