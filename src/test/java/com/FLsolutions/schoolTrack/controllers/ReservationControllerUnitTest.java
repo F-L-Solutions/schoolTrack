@@ -15,6 +15,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -23,6 +24,10 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.FLsolutions.schoolTrack.dtos.ReservationCreationRequestDto;
 import com.FLsolutions.schoolTrack.dtos.ReservationResponseDto;
 import com.FLsolutions.schoolTrack.dtos.StatusResponseDto;
+import com.FLsolutions.schoolTrack.exceptions.DuplicateReservationException;
+import com.FLsolutions.schoolTrack.exceptions.GenericEventException;
+import com.FLsolutions.schoolTrack.exceptions.GenericReservationException;
+import com.FLsolutions.schoolTrack.exceptions.KidNotFoundException;
 import com.FLsolutions.schoolTrack.models.DayType;
 import com.FLsolutions.schoolTrack.models.Kid;
 import com.FLsolutions.schoolTrack.models.Reservation;
@@ -133,4 +138,97 @@ public class ReservationControllerUnitTest {
 				.andExpect(jsonPath("$.[1].dayType", is("HALF_DAY")))
 				.andExpect(jsonPath("$.[1].status", is("WAITING")));
 	}
+
+	@Test
+	void GET_getReservationBySysId_withInvalidId_returnsError() throws Exception {
+		Mockito.when(reservarionService.fetchReservationBySysId(Mockito.anyLong()))
+				.thenThrow(new GenericReservationException("Validation Failed", HttpStatus.NOT_FOUND));
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/reservations/987"))
+				.andExpect(status().isNotFound())
+				.andExpect(jsonPath("$.message", is("Validation Failed")));
+	}
+
+	@Test
+	void POST_create_withInvalidPayload_returnsError() throws Exception {
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/reservations").content("{\"invalid\": \"data\""))
+				.andExpect(status().isUnsupportedMediaType());
+	}
+
+	@Test
+	void GET_getAllReservations_whenNoReservationExists_returnsError() throws Exception {
+		Mockito.when(reservarionService.fetchAllReservations())
+				.thenThrow(new GenericReservationException("Validation Failed", HttpStatus.NOT_FOUND));
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/reservations"))
+				.andExpect(status().isNotFound())
+				.andExpect(jsonPath("$.message", is("Validation Failed")));
+	}
+
+	@Test
+	void POST_create_withDuplicateEntries_returnsError() throws Exception {
+		Mockito.when(reservarionService.createReservation(Mockito.any()))
+				.thenThrow(new DuplicateReservationException("Validation Failed", HttpStatus.CONFLICT));
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/reservations")
+				.content(objectMapper.writeValueAsString(reservationRequestDto))
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isConflict())
+				.andExpect(jsonPath("$.message", is("Validation Failed")))
+				.andExpect(jsonPath("$.status", is(409)));
+	}
+
+	@Test
+	void POST_create_withInvalidKidUserName_returnsError() throws Exception {
+		Mockito.when(reservarionService.createReservation(Mockito.any()))
+				.thenThrow(new KidNotFoundException("Validation Failed", HttpStatus.NOT_FOUND));
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/reservations")
+				.content(objectMapper.writeValueAsString(reservationRequestDto))
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isNotFound())
+				.andExpect(jsonPath("$.message", is("Validation Failed")))
+				.andExpect(jsonPath("$.status", is(404)));
+	}
+
+	@Test
+	void POST_create_withInvalidDate_returnsError() throws Exception {
+		Mockito.when(reservarionService.createReservation(Mockito.any()))
+				.thenThrow(new GenericEventException("Validation Failed", HttpStatus.NOT_FOUND));
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/reservations")
+				.content(objectMapper.writeValueAsString(reservationRequestDto))
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isNotFound())
+				.andExpect(jsonPath("$.message", is("Validation Failed")))
+				.andExpect(jsonPath("$.status", is(404)));
+	}
+
+	@Test
+	void POST_create_withUnavailableSpots_returnsError() throws Exception {
+		Mockito.when(reservarionService.createReservation(Mockito.any()))
+				.thenThrow(new GenericEventException("Validation Failed", HttpStatus.CONFLICT));
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/reservations")
+				.content(objectMapper.writeValueAsString(reservationRequestDto))
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isConflict())
+				.andExpect(jsonPath("$.message", is("Validation Failed")))
+				.andExpect(jsonPath("$.status", is(409)));
+	}
+
+	@Test
+	void GET_getReservationsByKidId_withInvalidKidId_returnsError() throws Exception {
+
+		Mockito.when(reservarionService.fetchReservationsByKidSysId(Mockito.anyLong()))
+				.thenThrow(new GenericReservationException("Validation Failed", HttpStatus.NOT_FOUND));
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/reservations/kid/999"))
+				.andExpect(status().isNotFound())
+				.andExpect(jsonPath("$.message", is("Validation Failed")))
+				.andExpect(jsonPath("$.status", is(404)));
+
+	}
+
 }
