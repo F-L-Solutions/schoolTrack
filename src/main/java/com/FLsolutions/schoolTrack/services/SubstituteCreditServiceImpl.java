@@ -25,6 +25,10 @@ public class SubstituteCreditServiceImpl implements SubstituteCreditService {
 	}
 
 	public void createSubstituteCredit(Kid kid) {
+	    if (kid == null) {
+	        throw new IllegalArgumentException("Kid cannot be null");
+	    }
+	    
 		SubstituteCredit substituteCredit = new SubstituteCredit(kid);
 		substituteCreditRepository.save(substituteCredit);
 	}
