@@ -1,7 +1,9 @@
 package com.FLsolutions.schoolTrack.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.times;
@@ -19,8 +21,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 
 import com.FLsolutions.schoolTrack.dtos.SubstituteCreditResponseDto;
+import com.FLsolutions.schoolTrack.exceptions.GenericEventException;
 import com.FLsolutions.schoolTrack.models.Kid;
 import com.FLsolutions.schoolTrack.models.SubstituteCredit;
 import com.FLsolutions.schoolTrack.repositories.SubstituteCreditRepository;
@@ -91,6 +95,44 @@ public class SubstituteCreditUnitTest {
 		assertThat(responseDto.getExpirationDate()).isEqualTo(responseDto.getExpirationDate());
 		assertThat(responseDto.getKid().getSysId()).isEqualTo(responseDto.getKid().getSysId());
 		assertThat(responseDto.getSysId()).isEqualTo(responseDto.getSysId());
+
+		verify(creditRepository, times(1)).findBySysId(anyLong());
+	}
+
+	@Test
+	void createSubstituteCredit_withNullKid_throwsException() {
+		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+			creditService.createSubstituteCredit(null);
+		});
+
+		assertEquals("Kid cannot be null", exception.getMessage());
+	}
+
+	@Test
+	void fetchAllSubstituteCredit_whenNoCreditExists_throwsGenericEventException() {
+		when(creditRepository.findAll()).thenReturn(new ArrayList<>());
+
+		GenericEventException exception = assertThrows(GenericEventException.class, () -> {
+			creditService.fetchAllSubstituteCredit();
+		});
+		assertNotNull(exception);
+		assertThat(exception.getMessage()).isEqualTo("There are no credits in the database.");
+		assertThat(exception.getStatus()).isEqualTo(HttpStatus.NOT_FOUND);
+
+		verify(creditRepository, times(1)).findAll();
+	}
+
+	@Test
+	void fetchSubstituteCreditBySysId_withInvalidId_throwsGenericEventException() {
+		when(creditRepository.findBySysId(anyLong())).thenReturn(Optional.empty());
+
+		GenericEventException exception = assertThrows(GenericEventException.class, () -> {
+			creditService.fetchSubstituteCreditBySysId(999L);
+		});
+
+		assertNotNull(exception);
+		assertThat(exception.getMessage()).isEqualTo("There is no substitute credit with this id in the database: 999");
+		assertThat(exception.getStatus()).isEqualTo(HttpStatus.NOT_FOUND);
 
 		verify(creditRepository, times(1)).findBySysId(anyLong());
 	}
