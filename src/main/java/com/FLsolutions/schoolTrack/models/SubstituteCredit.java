@@ -78,4 +78,16 @@ public class SubstituteCredit {
 		return createdAt;
 	}
 
+	public void setSysId(long sysId) {
+		this.sysId = sysId;
+	}
+
+	public void setExpirationDate(LocalDateTime expirationDate) {
+		this.expirationDate = expirationDate;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+
 }
