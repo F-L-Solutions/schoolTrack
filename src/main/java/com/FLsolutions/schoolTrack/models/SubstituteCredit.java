@@ -1,5 +1,6 @@
 package com.FLsolutions.schoolTrack.models;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -27,7 +28,7 @@ public class SubstituteCredit {
 	private Kid kid;
 
 	@Column(name = "expiration_date")
-	private LocalDateTime expirationDate;
+	private LocalDate expirationDate;
 
 	private boolean used;
 
@@ -41,7 +42,7 @@ public class SubstituteCredit {
 
 	public SubstituteCredit(Kid kid) {
 		this.kid = kid;
-		this.expirationDate = this.setExpirationDate();
+		this.setExpirationDate();
 		this.used = false;
 	}
 
@@ -57,13 +58,13 @@ public class SubstituteCredit {
 		this.kid = kid;
 	}
 
-	public LocalDateTime getExpirationDate() {
+	public LocalDate getExpirationDate() {
 		return expirationDate;
 	}
 
-	public LocalDateTime setExpirationDate() {
-		LocalDateTime defaultExpirationDate = LocalDateTime.now().plusWeeks(1);
-		return defaultExpirationDate;
+	public void setExpirationDate() {
+		LocalDate defaultExpirationDate = LocalDate.now().plusWeeks(1);
+		this.expirationDate = defaultExpirationDate;
 	}
 
 	public boolean isUsed() {
@@ -80,10 +81,6 @@ public class SubstituteCredit {
 
 	public void setSysId(long sysId) {
 		this.sysId = sysId;
-	}
-
-	public void setExpirationDate(LocalDateTime expirationDate) {
-		this.expirationDate = expirationDate;
 	}
 
 	public void setCreatedAt(LocalDateTime createdAt) {

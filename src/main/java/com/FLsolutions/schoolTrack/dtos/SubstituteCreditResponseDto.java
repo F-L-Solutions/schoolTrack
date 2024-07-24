@@ -1,6 +1,6 @@
 package com.FLsolutions.schoolTrack.dtos;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import com.FLsolutions.schoolTrack.models.Kid;
 import com.FLsolutions.schoolTrack.models.SubstituteCredit;
@@ -9,7 +9,7 @@ public class SubstituteCreditResponseDto implements ResponseDto {
 
 	private final long sysId;
 	private final Kid kid;
-	private final LocalDateTime expirationDate;
+	private final LocalDate expirationDate;
 	private final boolean used;
 
 	public SubstituteCreditResponseDto(SubstituteCredit credit) {
@@ -29,7 +29,7 @@ public class SubstituteCreditResponseDto implements ResponseDto {
 		return kidResponseDto;
 	}
 
-	public LocalDateTime getExpirationDate() {
+	public LocalDate getExpirationDate() {
 		return expirationDate;
 	}
 
