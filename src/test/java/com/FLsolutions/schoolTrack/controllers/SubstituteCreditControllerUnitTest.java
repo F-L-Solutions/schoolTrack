@@ -1,7 +1,6 @@
 package com.FLsolutions.schoolTrack.controllers;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.mockito.Mockito.mock;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -15,17 +14,16 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import com.FLsolutions.schoolTrack.dtos.KidResponseDto;
 import com.FLsolutions.schoolTrack.dtos.SubstituteCreditResponseDto;
+import com.FLsolutions.schoolTrack.exceptions.GenericEventException;
 import com.FLsolutions.schoolTrack.models.Kid;
 import com.FLsolutions.schoolTrack.models.SubstituteCredit;
 import com.FLsolutions.schoolTrack.services.SubstituteCreditService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 @ContextConfiguration
 @WebMvcTest(SubstituteController.class)
@@ -37,8 +35,6 @@ public class SubstituteCreditControllerUnitTest {
 	@Autowired
 	private MockMvc mockMvc;
 
-	private ObjectMapper objectMapper;
-
 	private SubstituteCreditResponseDto responseDto1;
 	private SubstituteCreditResponseDto responseDto2;
 	private List<SubstituteCreditResponseDto> creditDtoList;
@@ -49,12 +45,6 @@ public class SubstituteCreditControllerUnitTest {
 	@BeforeEach
 	void setUp() {
 
-		// Initialise ObjectMapper instance
-		objectMapper = new ObjectMapper();
-		// Register the JavaTimeModule to handle Java 8 date/time types
-		objectMapper.registerModule(new JavaTimeModule());
-
-		// Mock Kid class
 		mockKid = new Kid();
 		mockKid.setSysId(3L);
 
@@ -98,5 +88,27 @@ public class SubstituteCreditControllerUnitTest {
 				.andExpect(jsonPath("$.kid.sysId", is(3)))
 				.andExpect(jsonPath("$.expirationDate", is(expirationDate)))
 				.andExpect(jsonPath("$.used", is(false)));
+	}
+
+	@Test
+	void GET_getAllCredit_whenNoCreditExists_returnsError() throws Exception {
+		Mockito.when(creditService.fetchAllSubstituteCredit())
+				.thenThrow(new GenericEventException("Validation Failed", HttpStatus.NOT_FOUND));
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/substitutes/credit"))
+				.andExpect(status().isNotFound())
+				.andExpect(jsonPath("$.message", is("Validation Failed")))
+				.andExpect(jsonPath("$.status", is(404)));
+	}
+
+	@Test
+	void GET_getSubstituteCreditBySysId__withInvalidId_returnsError() throws Exception {
+		Mockito.when(creditService.fetchSubstituteCreditBySysId(999L))
+				.thenThrow(new GenericEventException("Validation Failed", HttpStatus.NOT_FOUND));
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/substitutes/999"))
+				.andExpect(status().isNotFound())
+				.andExpect(jsonPath("$.message", is("Validation Failed")))
+				.andExpect(jsonPath("$.status", is(404)));
 	}
 }
