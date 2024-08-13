@@ -26,11 +26,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 
 import com.FLsolutions.schoolTrack.dtos.AttendanceCreationRequestDto;
 import com.FLsolutions.schoolTrack.dtos.AttendanceResponseDto;
 import com.FLsolutions.schoolTrack.dtos.StatusResponseDto;
+import com.FLsolutions.schoolTrack.exceptions.DuplicateAttendanceException;
 import com.FLsolutions.schoolTrack.exceptions.GenericAttendanceException;
+import com.FLsolutions.schoolTrack.exceptions.GenericEventException;
+import com.FLsolutions.schoolTrack.exceptions.KidNotFoundException;
 import com.FLsolutions.schoolTrack.models.Attendance;
 import com.FLsolutions.schoolTrack.models.AttendanceDay;
 import com.FLsolutions.schoolTrack.models.AttendanceStatus;
@@ -207,6 +211,136 @@ public class AttendanceServiceUnitTest {
 	}
 
 	@Test
+	void createAttendance_withNoKid_throwsKidNotFoundException() {
+		when(kidRepository.findByUserName(anyString())).thenReturn(Optional.empty());
+
+		KidNotFoundException exception = assertThrows(KidNotFoundException.class, () -> {
+			attendanceService.createAttendance(singleRequestDto);
+		});
+
+		assertNotNull(exception);
+		assertEquals("Selected kid username was not found in the database", exception.getMessage());
+		assertEquals(HttpStatus.NOT_FOUND, exception.getStatus());
+
+	}
+
+	@Test
+	void createAttendance_whenKidHasAttendanceForTheDay_throwsDuplicateAttendanceException() {
+		when(kidRepository.findByUserName(anyString())).thenReturn(Optional.of(kid));
+		when(attendanceRepository.findByKidIdAndDate(anyLong(), any())).thenReturn(Optional.of(attendance1));
+
+		DuplicateAttendanceException exception = assertThrows(DuplicateAttendanceException.class, () -> {
+			attendanceService.createAttendance(singleRequestDto);
+		});
+
+		assertNotNull(exception);
+		assertEquals("Selected kid already has attendance for this day", exception.getMessage());
+		assertEquals(HttpStatus.CONFLICT, exception.getStatus());
+	}
+
+	@Test
+	void createAttendance_withNoEvent_throwsGenericEventException() {
+		when(kidRepository.findByUserName(anyString())).thenReturn(Optional.of(kid));
+		when(attendanceRepository.findByKidIdAndDate(anyLong(), any())).thenReturn(Optional.empty());
+		when(eventRepository.findByDate(any())).thenReturn(Optional.empty());
+
+		GenericEventException exception = assertThrows(GenericEventException.class, () -> {
+			attendanceService.createAttendance(singleRequestDto);
+		});
+
+		assertNotNull(exception);
+		assertEquals("For selected date there was no event found in database", exception.getMessage());
+		assertEquals(HttpStatus.NOT_FOUND, exception.getStatus());
+	}
+
+	@Test
+	void createAttendance_withNoAvailableSpots_throwsGenericEventException() {
+		when(kidRepository.findByUserName(anyString())).thenReturn(Optional.of(kid));
+		when(attendanceRepository.findByKidIdAndDate(anyLong(), any())).thenReturn(Optional.empty());
+		event.setAvailableSpots(0); // No available spots
+		when(eventRepository.findByDate(any())).thenReturn(Optional.of(event));
+
+		GenericEventException exception = assertThrows(GenericEventException.class, () -> {
+			attendanceService.createAttendance(singleRequestDto);
+		});
+
+		assertNotNull(exception);
+		assertEquals("For selected date there are no more spots available", exception.getMessage());
+		assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+	}
+
+	@Test
+	void bulkCreateAttendances_withNoKid_throwsKidNotFoundException() {
+		when(kidRepository.findByUserName(anyString())).thenReturn(Optional.empty());
+
+		KidNotFoundException exception = assertThrows(KidNotFoundException.class, () -> {
+			attendanceService.bulkCreateAttendances(bulkRequestDto);
+		});
+
+		assertNotNull(exception);
+		assertEquals("Selected kid username was not found in the database", exception.getMessage());
+		assertEquals(HttpStatus.NOT_FOUND, exception.getStatus());
+	}
+
+	@Test
+	void bulkCreateAttendances_whenKidHasAttendanceForTheDay_throwsDuplicateAttendanceException() {
+		when(kidRepository.findByUserName(anyString())).thenReturn(Optional.of(kid));
+		when(attendanceRepository.findByKidIdAndDate(anyLong(), any())).thenReturn(Optional.of(attendance1));
+
+		DuplicateAttendanceException exception = assertThrows(DuplicateAttendanceException.class, () -> {
+			attendanceService.bulkCreateAttendances(bulkRequestDto);
+		});
+
+		assertNotNull(exception);
+		assertEquals("Selected kid already has attendance for 2024-07-31", exception.getMessage());
+		assertEquals(HttpStatus.CONFLICT, exception.getStatus());
+	}
+
+	@Test
+	void bulkCreateAttendances_withNoEvent_throwsGenericEventException() {
+		when(kidRepository.findByUserName(anyString())).thenReturn(Optional.of(kid));
+		when(attendanceRepository.findByKidIdAndDate(anyLong(), any())).thenReturn(Optional.empty());
+		when(eventRepository.findByDate(any())).thenReturn(Optional.empty());
+
+		GenericEventException exception = assertThrows(GenericEventException.class, () -> {
+			attendanceService.bulkCreateAttendances(bulkRequestDto);
+		});
+
+		assertNotNull(exception);
+		assertEquals("For selected date 2024-07-31 there was no event found in database", exception.getMessage());
+		assertEquals(HttpStatus.NOT_FOUND, exception.getStatus());
+	}
+
+	@Test
+	void bulkCreateAttendances_withNoAvailableSpots_throwsGenericEventException() {
+		when(kidRepository.findByUserName(anyString())).thenReturn(Optional.of(kid));
+		when(attendanceRepository.findByKidIdAndDate(anyLong(), any())).thenReturn(Optional.empty());
+		event.setAvailableSpots(0); // No available spots
+		when(eventRepository.findByDate(any())).thenReturn(Optional.of(event));
+
+		GenericEventException exception = assertThrows(GenericEventException.class, () -> {
+			attendanceService.bulkCreateAttendances(bulkRequestDto);
+		});
+
+		assertNotNull(exception);
+		assertEquals("For selected date 2024-07-31 there are no more spots available", exception.getMessage());
+		assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+	}
+
+	@Test
+	void cancelAttendance_withInvalidId_throwsGenericAttendanceException() {
+		when(attendanceRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+		GenericAttendanceException exception = assertThrows(GenericAttendanceException.class, () -> {
+			attendanceService.cancelAttendance(anyLong());
+		});
+
+		assertNotNull(exception);
+		assertEquals("Attendance not found with id: 0", exception.getMessage());
+		assertEquals(HttpStatus.NOT_FOUND, exception.getStatus());
+	}
+
+	@Test
 	void cancelAttendance_whenAlreadyCanceled_throwsGenericAttendanceException() {
 		when(attendanceRepository.findById(anyLong())).thenReturn(Optional.of(attendance3));
 
@@ -217,5 +351,44 @@ public class AttendanceServiceUnitTest {
 		verify(creditService, times(0)).createSubstituteCredit(kid);
 		assertNotNull(exception);
 		assertEquals("Attendance is not possible to cancel anymore.", exception.getMessage());
+	}
+
+	@Test
+	void fetchAllAttendances_withNoAttendance_throwsGenericAttendanceException() {
+		when(attendanceRepository.findAll()).thenReturn(new ArrayList<>());
+
+		GenericAttendanceException exception = assertThrows(GenericAttendanceException.class, () -> {
+			attendanceService.fetchAllAttendances();
+		});
+
+		assertNotNull(exception);
+		assertEquals("No attendances exist in the database.", exception.getMessage());
+		assertEquals(HttpStatus.NOT_FOUND, exception.getStatus());
+	}
+
+	@Test
+	void fetchAttendanceByKidSysId_withNoAttendance_throwsGenericAttendanceException() {
+		when(attendanceRepository.findByKidSysId(anyLong())).thenReturn(Optional.empty());
+
+		GenericEventException exception = assertThrows(GenericEventException.class, () -> {
+			attendanceService.fetchAttendanceByKidSysId(anyLong());
+		});
+
+		assertNotNull(exception);
+		assertEquals("There are no attendances for kid with id: 0", exception.getMessage());
+		assertEquals(HttpStatus.NOT_FOUND, exception.getStatus());
+	}
+
+	@Test
+	void fetchAttendanceBySysId_withNoAttendance_throwsGenericAttendanceException() {
+		when(attendanceRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+		GenericAttendanceException exception = assertThrows(GenericAttendanceException.class, () -> {
+			attendanceService.fetchAttendanceBySysId(anyLong());
+		});
+
+		assertNotNull(exception);
+		assertEquals("Attendance with this id was not found in the database.", exception.getMessage());
+		assertEquals(HttpStatus.NOT_FOUND, exception.getStatus());
 	}
 };
