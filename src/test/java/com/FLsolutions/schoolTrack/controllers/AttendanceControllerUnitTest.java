@@ -14,6 +14,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -22,6 +23,10 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.FLsolutions.schoolTrack.dtos.AttendanceCreationRequestDto;
 import com.FLsolutions.schoolTrack.dtos.AttendanceResponseDto;
 import com.FLsolutions.schoolTrack.dtos.StatusResponseDto;
+import com.FLsolutions.schoolTrack.exceptions.DuplicateAttendanceException;
+import com.FLsolutions.schoolTrack.exceptions.GenericAttendanceException;
+import com.FLsolutions.schoolTrack.exceptions.GenericEventException;
+import com.FLsolutions.schoolTrack.exceptions.KidNotFoundException;
 import com.FLsolutions.schoolTrack.models.Attendance;
 import com.FLsolutions.schoolTrack.models.AttendanceDay;
 import com.FLsolutions.schoolTrack.models.AttendanceStatus;
@@ -178,5 +183,113 @@ public class AttendanceControllerUnitTest {
 				.andExpect(jsonPath("$.attendanceStatus", is("ATTENDED")))
 				.andExpect(jsonPath("$.attendanceDay", is("TUE")))
 				.andExpect(jsonPath("$.excused", is(false)));
+	}
+
+	@Test
+	void POST_create_withInvalidPayload_returnsError() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.post("/attendances").content("{\"invalid\": \"data\""))
+				.andExpect(status().isUnsupportedMediaType());
+	}
+
+	@Test
+	void POST_create_withDuplicateEntries_returnsError() throws Exception {
+		Mockito.when(attendanceService.createAttendance(Mockito.any()))
+				.thenThrow(new DuplicateAttendanceException("Validation Failed", HttpStatus.CONFLICT));
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/attendances")
+				.content(objectMapper.writeValueAsString(singleRequestDto))
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isConflict())
+				.andExpect(jsonPath("$.message", is("Validation Failed")))
+				.andExpect(jsonPath("$.status", is(409)));
+	}
+
+	@Test
+	void POST_create_withInvalidKidUserName_returnsError() throws Exception {
+		Mockito.when(attendanceService.createAttendance(Mockito.any()))
+				.thenThrow(new KidNotFoundException("Validation Failed", HttpStatus.NOT_FOUND));
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/attendances")
+				.content(objectMapper.writeValueAsString(singleRequestDto))
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isNotFound())
+				.andExpect(jsonPath("$.message", is("Validation Failed")))
+				.andExpect(jsonPath("$.status", is(404)));
+	}
+
+	@Test
+	void POST_create_withInvalidDate_returnsError() throws Exception {
+		Mockito.when(attendanceService.createAttendance(Mockito.any()))
+				.thenThrow(new GenericEventException("Validation Failed", HttpStatus.BAD_REQUEST));
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/attendances")
+				.content(objectMapper.writeValueAsString(singleRequestDto))
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.message", is("Validation Failed")))
+				.andExpect(jsonPath("$.status", is(400)));
+	}
+
+	@Test
+	void POST_create_withUnavailableSpots_returnsError() throws Exception {
+		Mockito.when(attendanceService.createAttendance(Mockito.any()))
+				.thenThrow(new GenericEventException("Validation Failed", HttpStatus.BAD_REQUEST));
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/attendances")
+				.content(objectMapper.writeValueAsString(singleRequestDto))
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.message", is("Validation Failed")))
+				.andExpect(jsonPath("$.status", is(400)));
+	}
+
+	@Test
+	void POST_bulkCreate_withInvalidPayload_returnsError() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.post("/attendances/bulk-create").content("{\"invalid\": \"data\""))
+				.andExpect(status().isUnsupportedMediaType());
+	}
+
+	@Test
+	void POST_cancel_withInvalidSysId_returnsError() throws Exception {
+		Mockito.when(attendanceService.cancelAttendance(Mockito.anyLong()))
+				.thenThrow(new GenericAttendanceException("Validation Failed", HttpStatus.NOT_FOUND));
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/attendances/999/cancel"))
+				.andExpect(status().isNotFound())
+				.andExpect(jsonPath("$.message", is("Validation Failed")))
+				.andExpect(jsonPath("$.status", is(404)));
+	}
+
+	@Test
+	void GET_getAllAttendances_whenNoAttendancesExist_returnsError() throws Exception {
+		Mockito.when(attendanceService.fetchAllAttendances())
+				.thenThrow(new GenericAttendanceException("Validation Failed", HttpStatus.NOT_FOUND));
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/attendances"))
+				.andExpect(status().isNotFound())
+				.andExpect(jsonPath("$.message", is("Validation Failed")))
+				.andExpect(jsonPath("$.status", is(404)));
+	}
+
+	@Test
+	void GET_getAttendanceBySysId_withInvalidSysId_returnsError() throws Exception {
+		Mockito.when(attendanceService.fetchAttendanceBySysId(Mockito.anyLong()))
+				.thenThrow(new GenericAttendanceException("Validation Failed", HttpStatus.NOT_FOUND));
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/attendances/999"))
+				.andExpect(status().isNotFound())
+				.andExpect(jsonPath("$.message", is("Validation Failed")))
+				.andExpect(jsonPath("$.status", is(404)));
+	}
+
+	@Test
+	void GET_getAttendancesByKidSysId_withInvalidKidSysId_returnsError() throws Exception {
+		Mockito.when(attendanceService.fetchAttendanceByKidSysId(Mockito.anyLong()))
+				.thenThrow(new GenericEventException("Validation Failed", HttpStatus.NOT_FOUND));
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/attendances/kid/999"))
+				.andExpect(status().isNotFound())
+				.andExpect(jsonPath("$.message", is("Validation Failed")))
+				.andExpect(jsonPath("$.status", is(404)));
 	}
 }
