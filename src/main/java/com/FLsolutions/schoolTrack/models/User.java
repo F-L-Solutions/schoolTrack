@@ -112,7 +112,16 @@ public class User {
 	public void setSysId(Long sysId) {
 		this.sysId = sysId;
 	}
-	
-	
 
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public String getPassword() {
+		return password;
+	}
 }
