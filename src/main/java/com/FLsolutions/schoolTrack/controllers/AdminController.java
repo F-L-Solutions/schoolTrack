@@ -41,7 +41,7 @@ public class AdminController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<AdminResponseDto> getAllAdmins(@PathVariable("id") Long id){
+	public ResponseEntity<AdminResponseDto> getAdminBySysId(@PathVariable("id") Long id){
 		AdminResponseDto response = adminService.fetchAdminBySysId(id);
 		return new ResponseEntity<AdminResponseDto>(response, HttpStatus.OK);
 	}
