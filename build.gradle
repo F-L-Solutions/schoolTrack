@@ -17,12 +17,22 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-validation:3.2.5'
+
+	// Core Spring Boot dependencies for web applications and data access
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa' // JPA and Hibernate support for database interactions
+	implementation 'org.springframework.boot:spring-boot-starter-web' // For building web applications with Spring MVC and embedded Tomcat server
+	implementation 'org.springframework.boot:spring-boot-starter-validation:3.2.5' // Provides validation for request bodies, such as @Valid annotations
+	
+	// MySQL database driver for connecting to a MySQL database
 	runtimeOnly 'com.mysql:mysql-connector-j'
+	
+	// For serving the application using Tomcat as the servlet container
 	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+	
+	// Testing framework that includes JUnit, MockMvc, and other testing utilities
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	
+	// Jackson library for serialization and deserialization of Java 8 Date/Time API (JSR-310)
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.17.2'
 	
 }
