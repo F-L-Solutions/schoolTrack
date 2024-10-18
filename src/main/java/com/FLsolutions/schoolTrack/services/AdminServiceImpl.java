@@ -41,7 +41,7 @@ public class AdminServiceImpl implements AdminService {
 			throw new GenericUserException("Admin with this name already exists.", HttpStatus.CONFLICT);
 		}
 		Admin admin = new Admin(request.getFirstName(), request.getLastName(), request.getEmail(),
-				request.getAdminRole());
+				request.getRole());
 		adminRepository.save(admin);
 		responseDto.setStatus("Admin was created");
 

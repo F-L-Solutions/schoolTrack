@@ -1,30 +1,28 @@
 package com.FLsolutions.schoolTrack.dtos;
 
-import com.FLsolutions.schoolTrack.models.AdminRole;
+import com.FLsolutions.schoolTrack.models.Role;
 
-public class AdminCreationRequestDto extends UserCreationRequestDto{
-	
-	private AdminRole adminRole;
+public class AdminCreationRequestDto extends UserCreationRequestDto {
+
+	private Role role;
 	private String email;
 
 	public AdminCreationRequestDto() {
 		super();
-		
 	}
 
-	public AdminCreationRequestDto(String firstName, String lastName, AdminRole adminRole, String email) {
+	public AdminCreationRequestDto(String firstName, String lastName, Role role, String email) {
 		super(firstName, lastName);
-		this.adminRole = adminRole;
+		this.role = role;
 		this.email = email;
-		
 	}
 
-	public AdminRole getAdminRole() {
-		return adminRole;
+	public Role getRole() {
+		return role;
 	}
 
-	public void setAdminRole(AdminRole adminRole) {
-		this.adminRole = adminRole;
+	public void setRole(Role adminRole) {
+		this.role = adminRole;
 	}
 
 	public String getEmail() {
@@ -34,9 +32,4 @@ public class AdminCreationRequestDto extends UserCreationRequestDto{
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
-	
-	
-	
-
 }

@@ -1,27 +1,27 @@
 package com.FLsolutions.schoolTrack.dtos;
 
 import com.FLsolutions.schoolTrack.models.Admin;
-import com.FLsolutions.schoolTrack.models.AdminRole;
+import com.FLsolutions.schoolTrack.models.Role;
 
-public class AdminResponseDto implements ResponseDto{
-	
+public class AdminResponseDto implements ResponseDto {
+
 	private final Long sysId;
 	private final String firstName;
 	private final String lastName;
-	private final AdminRole adminRole;
-	
+	private final Role role;
+
 	public AdminResponseDto(Admin admin) {
 		this.sysId = admin.getSysId();
 		this.firstName = admin.getFirstName();
 		this.lastName = admin.getLastName();
-		this.adminRole = admin.getAdminRole();
+		this.role = admin.getRole();
 	}
-	
+
 	public AdminResponseDto(Long sysId, String firstName, String lastName) {
 		this.sysId = sysId;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.adminRole = null;
+		this.role = null;
 	}
 
 	public Long getSysId() {
@@ -36,10 +36,7 @@ public class AdminResponseDto implements ResponseDto{
 		return lastName;
 	}
 
-	public AdminRole getAdminRole() {
-		return adminRole;
+	public Role getRole() {
+		return role;
 	}
-	
-	
-
 }

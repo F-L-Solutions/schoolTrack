@@ -6,23 +6,20 @@ import jakarta.persistence.*;
 @Table(name = "admins")
 public class Admin extends User{
 	
-	private AdminRole adminRole;
+	private Role role;
 	
 	public Admin() {}
 
-	public Admin(String firstName, String lastName, String email, AdminRole adminRole) {
+	public Admin(String firstName, String lastName, String email, Role role) {
 		super(firstName, lastName, email);
-		this.adminRole = adminRole;
+		this.role = role;
 	}
 
-	public AdminRole getAdminRole() {
-		return adminRole;
+	public Role getRole() {
+		return role;
 	}
 
-	public void setAdminRole(AdminRole adminRole) {
-		this.adminRole = adminRole;
+	public void setRole(Role role) {
+		this.role = role;
 	}
-	
-	
-
 }

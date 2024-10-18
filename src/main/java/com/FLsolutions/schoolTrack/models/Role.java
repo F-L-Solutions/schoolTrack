@@ -1,17 +1,17 @@
 package com.FLsolutions.schoolTrack.models;
 
-public enum AdminRole {
-	ADMIN("admin"), SUPER_ADMIN("super admin");
+public enum Role {
+	ROLE_USER("user"), 
+	ROLE_ADMIN("admin"), 
+	ROLE_SUPER_ADMIN("super admin");
 	
 	private String name;
 
-	AdminRole(String name) {
+	Role(String name) {
 		this.name = name;
 	}
 
 	public String getName() {
 		return name;
 	}
-	
-
 }

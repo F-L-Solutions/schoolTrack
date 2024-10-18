@@ -25,6 +25,8 @@ public class User {
 	@Column(name = "user_name", unique = true, nullable = false)
 	private String userName;
 	private String password;
+	
+	private Role role;
 
 	@CreationTimestamp
 	@Column(name = "created_at", nullable = false, updatable = false)
@@ -37,6 +39,7 @@ public class User {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.userName = Utils.createUserName(firstName, lastName);
+		this.role= Role.ROLE_USER;
 	}
 
 	public User(String firstName, String lastName, String email) {
@@ -46,11 +49,13 @@ public class User {
 		this.userName = Utils.createUserName(firstName, lastName);
 		// method to create safe password to be done
 		this.password = createPassword();
+		this.role= Role.ROLE_USER;
 	}
 
 	public User(String firstName, String lastName, String telNumber, String email) {
 		this(firstName, lastName, email);
 		this.telNumber = telNumber;
+		this.role= Role.ROLE_USER;
 	}
 
 //	public String createUserName(String firstName, String lastName) {
@@ -124,4 +129,13 @@ public class User {
 	public String getPassword() {
 		return password;
 	}
+
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+	
 }

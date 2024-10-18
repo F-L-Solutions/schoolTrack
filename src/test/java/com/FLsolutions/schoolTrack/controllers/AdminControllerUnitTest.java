@@ -25,7 +25,7 @@ import com.FLsolutions.schoolTrack.dtos.StatusResponseDto;
 import com.FLsolutions.schoolTrack.exceptions.GenericEventException;
 import com.FLsolutions.schoolTrack.exceptions.GenericUserException;
 import com.FLsolutions.schoolTrack.models.Admin;
-import com.FLsolutions.schoolTrack.models.AdminRole;
+import com.FLsolutions.schoolTrack.models.Role;
 import com.FLsolutions.schoolTrack.models.User;
 import com.FLsolutions.schoolTrack.services.AdminService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -53,8 +53,8 @@ public class AdminControllerUnitTest {
 		// Initialise ObjectMapper instance
 		objectMapper = new ObjectMapper();
 
-		Admin admin1 = new Admin("Test1", "Admin1", "test1@admin.com", AdminRole.ADMIN);
-		Admin admin2 = new Admin("Test2", "Admin2", "test2@admin.com", AdminRole.SUPER_ADMIN);
+		Admin admin1 = new Admin("Test1", "Admin1", "test1@admin.com", Role.ROLE_ADMIN);
+		Admin admin2 = new Admin("Test2", "Admin2", "test2@admin.com", Role.ROLE_SUPER_ADMIN);
 		admin1.setSysId(1L);
 		admin2.setSysId(2L);
 
@@ -65,7 +65,7 @@ public class AdminControllerUnitTest {
 		responseDtoList.add(responseDto1);
 		responseDtoList.add(responseDto2);
 
-		creationRequestDto = new AdminCreationRequestDto("Created", "Admin", AdminRole.ADMIN, "created@admin.com");
+		creationRequestDto = new AdminCreationRequestDto("Created", "Admin", Role.ROLE_ADMIN, "created@admin.com");
 	}
 
 	@Test
