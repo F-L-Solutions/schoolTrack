@@ -23,6 +23,12 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web' // For building web applications with Spring MVC and embedded Tomcat server
 	implementation 'org.springframework.boot:spring-boot-starter-validation:3.2.5' // Provides validation for request bodies, such as @Valid annotations
 	
+	// Spring Security core functionality, including authentication and authorization mechanisms
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	
+	// Spring Boot DevTools for live reload and development support
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	
 	// MySQL database driver for connecting to a MySQL database
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	
@@ -31,6 +37,12 @@ dependencies {
 	
 	// Testing framework that includes JUnit, MockMvc, and other testing utilities
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	
+	// Spring Security testing framework for authentication/authorization testing
+	testImplementation 'org.springframework.security:spring-security-test'
+	
+	// JUnit Platform for running tests
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	
 	// Jackson library for serialization and deserialization of Java 8 Date/Time API (JSR-310)
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.17.2'
