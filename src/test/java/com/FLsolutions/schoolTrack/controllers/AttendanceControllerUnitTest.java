@@ -88,9 +88,9 @@ public class AttendanceControllerUnitTest {
 		attendanceDays.add(AttendanceDay.FRI);
 
 		bulkRequestDto = new AttendanceCreationRequestDto(LocalDate.of(2024, 8, 12), LocalDate.of(2024, 8, 16),
-				DayType.FULL_DAY, mockKid.getUserName(), attendanceDays);
+				DayType.FULL_DAY, mockKid.getUsername(), attendanceDays);
 		singleRequestDto = new AttendanceCreationRequestDto(LocalDate.of(2024, 8, 12), DayType.HALF_DAY,
-				mockKid.getUserName());
+				mockKid.getUsername());
 	}
 
 	@Test

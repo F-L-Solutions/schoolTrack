@@ -79,7 +79,7 @@ public class ReservationControllerUnitTest {
 		responseDtoList.add(reservationResponseDto2);
 
 		reservationRequestDto = new ReservationCreationRequestDto(LocalDate.of(2024, 1, 3), DayType.FULL_DAY,
-				mockKid.getUserName());
+				mockKid.getUsername());
 	}
 
 	@Test

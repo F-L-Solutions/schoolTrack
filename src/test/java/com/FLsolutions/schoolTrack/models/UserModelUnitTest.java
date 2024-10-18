@@ -64,14 +64,14 @@ public class UserModelUnitTest {
 		User user = new User("Test", "User");
 
 		// Verify that the userName is as expected
-		assertEquals("TestUserMocked", user.getUserName());
+		assertEquals("TestUserMocked", user.getUsername());
 	}
 
 	@Test
 	void testConstructor_withBasicDetails_allFieldsAreSetCorrectly() {
 		assertEquals(firstName, user1.getFirstName());
 		assertEquals(lastName, user1.getLastName());
-		assertEquals(userName, user1.getUserName());
+		assertEquals(userName, user1.getUsername());
 		assertEquals(1L, user1.getSysId());
 	}
 
@@ -80,7 +80,7 @@ public class UserModelUnitTest {
 		assertEquals(firstName, user2.getFirstName());
 		assertEquals(lastName, user2.getLastName());
 		assertEquals(email, user2.getEmail());
-		assertEquals(userName, user2.getUserName());
+		assertEquals(userName, user2.getUsername());
 		assertEquals(2L, user2.getSysId());
 	}
 
@@ -90,7 +90,7 @@ public class UserModelUnitTest {
 		assertEquals(lastName, user3.getLastName());
 		assertEquals(telNumber, user3.getTelNumber());
 		assertEquals(email, user3.getEmail());
-		assertEquals(userName, user3.getUserName());
+		assertEquals(userName, user3.getUsername());
 		assertEquals(3L, user3.getSysId());
 	}
 
@@ -111,7 +111,7 @@ public class UserModelUnitTest {
 		assertEquals(email, user.getEmail());
 
 		user.setUserName(userName);
-		assertEquals(userName, user.getUserName());
+		assertEquals(userName, user.getUsername());
 
 		user.setPassword(password);
 		assertEquals(password, user.getPassword());

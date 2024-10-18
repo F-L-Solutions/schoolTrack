@@ -112,9 +112,9 @@ public class AttendanceServiceUnitTest {
 		attendanceDays.add(AttendanceDay.THU);
 
 		bulkRequestDto = new AttendanceCreationRequestDto(LocalDate.of(2024, 7, 31), LocalDate.of(2024, 8, 1),
-				DayType.HALF_DAY, kid.getUserName(), attendanceDays);
+				DayType.HALF_DAY, kid.getUsername(), attendanceDays);
 		singleRequestDto = new AttendanceCreationRequestDto(LocalDate.of(2024, 8, 2), DayType.FULL_DAY,
-				kid.getUserName());
+				kid.getUsername());
 	}
 
 	@Test
