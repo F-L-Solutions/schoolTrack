@@ -16,13 +16,15 @@ import com.FLsolutions.schoolTrack.exceptions.DuplicateEmailException;
 import com.FLsolutions.schoolTrack.exceptions.GenericUserException;
 import com.FLsolutions.schoolTrack.models.Admin;
 import com.FLsolutions.schoolTrack.repositories.AdminRepository;
+import com.FLsolutions.schoolTrack.repositories.UserRepository;
 
 @Service
-public class AdminServiceImpl implements AdminService {
+public class AdminServiceImpl extends UserServiceImpl implements AdminService {
 
 	private AdminRepository adminRepository;
 
-	public AdminServiceImpl(AdminRepository adminRepository) {
+	public AdminServiceImpl(AdminRepository adminRepository, UserRepository userRepository) {
+		super(userRepository);
 		this.adminRepository = adminRepository;
 	}
 
@@ -42,7 +44,7 @@ public class AdminServiceImpl implements AdminService {
 		}
 		Admin admin = new Admin(request.getFirstName(), request.getLastName(), request.getEmail(),
 				request.getRole());
-		adminRepository.save(admin);
+		save(admin);
 		responseDto.setStatus("Admin was created");
 
 		return responseDto;

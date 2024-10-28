@@ -8,17 +8,17 @@ import com.FLsolutions.schoolTrack.models.ReservationStatus;
 public class ReservationCreationRequestDto {
 
 	private LocalDate date;
-	private String kidUserName;
+	private String kidUsername;
 	private ReservationStatus status;
 	private DayType dayType;
 
 	public ReservationCreationRequestDto() {
 	}
 
-	public ReservationCreationRequestDto(LocalDate date, DayType dayType, String kidUserName) {
+	public ReservationCreationRequestDto(LocalDate date, DayType dayType, String kidUsername) {
 		this.date = date;
 		this.dayType = dayType;
-		this.kidUserName = kidUserName;
+		this.kidUsername = kidUsername;
 		this.status = ReservationStatus.WAITING;
 	}
 
@@ -30,12 +30,12 @@ public class ReservationCreationRequestDto {
 		this.date = date;
 	}
 
-	public String getKidUserName() {
-		return kidUserName;
+	public String getKidUsername() {
+		return kidUsername;
 	}
 
-	public void setKidUserName(String kidUserName) {
-		this.kidUserName = kidUserName;
+	public void setKidUsername(String kidUsername) {
+		this.kidUsername = kidUsername;
 	}
 
 	public ReservationStatus getStatus() {

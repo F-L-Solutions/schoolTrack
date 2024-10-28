@@ -39,7 +39,7 @@ public class ParentServiceImpl implements ParentService {
 			throw new DuplicateEmailException("Email already exists", HttpStatus.CONFLICT);
 		}
 
-		if (parentRepository.findByUserName(username) != null) {
+		if (parentRepository.findByUsername(username) != null) {
 			throw new GenericUserException("Username already exists", HttpStatus.CONFLICT);
 		}
 

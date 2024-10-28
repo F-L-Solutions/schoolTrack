@@ -14,7 +14,7 @@ public class AttendanceCreationRequestDto {
 	private LocalDate startDate;
 	private LocalDate endDate;
 	private DayType dayType;
-	private String kidUserName;
+	private String kidUsername;
 	private AttendanceStatus status;
 	private List<AttendanceDay> attendanceDays;
 
@@ -22,21 +22,21 @@ public class AttendanceCreationRequestDto {
 	}
 
 	// for bulk creation, e.g. every Thursdays the same attendance
-	public AttendanceCreationRequestDto(LocalDate startDate, LocalDate endDate, DayType dayType, String kidUserName,
+	public AttendanceCreationRequestDto(LocalDate startDate, LocalDate endDate, DayType dayType, String kidUsername,
 			List<AttendanceDay> attendanceDays) {
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.dayType = dayType;
-		this.kidUserName = kidUserName;
+		this.kidUsername = kidUsername;
 		this.status = AttendanceStatus.IDLE;
 		this.attendanceDays = attendanceDays;
 	}
 
 	// for singular attendance creation
-	public AttendanceCreationRequestDto(LocalDate date, DayType dayType, String kidUserName) {
+	public AttendanceCreationRequestDto(LocalDate date, DayType dayType, String kidUsername) {
 		this.date = date;
 		this.dayType = dayType;
-		this.kidUserName = kidUserName;
+		this.kidUsername = kidUsername;
 		this.status = AttendanceStatus.IDLE;
 	}
 
@@ -72,12 +72,12 @@ public class AttendanceCreationRequestDto {
 		this.dayType = dayType;
 	}
 
-	public String getKidUserName() {
-		return kidUserName;
+	public String getKidUsername() {
+		return kidUsername;
 	}
 
-	public void setKidUserName(String kidUserName) {
-		this.kidUserName = kidUserName;
+	public void setKidUsername(String kidUsername) {
+		this.kidUsername = kidUsername;
 	}
 
 	public AttendanceStatus getStatus() {

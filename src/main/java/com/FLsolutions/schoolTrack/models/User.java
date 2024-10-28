@@ -28,7 +28,7 @@ public class User implements UserDetails {
 	private String email;
 
 	@Column(name = "user_name", unique = true, nullable = false)
-	private String userName;
+	private String username;
 	private String password;
 
 	@Enumerated(EnumType.STRING)
@@ -49,7 +49,7 @@ public class User implements UserDetails {
 	public User(String firstName, String lastName) {
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.userName = Utils.createUserName(firstName, lastName);
+		this.username = Utils.createUserName(firstName, lastName);
 		this.role = Role.ROLE_USER;
 	}
 
@@ -57,7 +57,7 @@ public class User implements UserDetails {
 		this(firstName, lastName);
 		this.email = email;
 
-		this.userName = Utils.createUserName(firstName, lastName);
+		this.username = Utils.createUserName(firstName, lastName);
 		// method to create safe password to be done
 		this.password = createPassword();
 		this.role = Role.ROLE_USER;
@@ -113,8 +113,8 @@ public class User implements UserDetails {
 		this.email = email;
 	}
 
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public void setPassword(String password) {
@@ -167,6 +167,6 @@ public class User implements UserDetails {
 
 	@Override
 	public String getUsername() {
-		return userName;
+		return username;
 	}
 }

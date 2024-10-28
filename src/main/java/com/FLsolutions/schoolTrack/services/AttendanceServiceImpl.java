@@ -47,7 +47,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 	public StatusResponseDto createAttendance(AttendanceCreationRequestDto request) {
 		StatusResponseDto response = new StatusResponseDto("");
 
-		Kid kid = kidRepository.findByUserName(request.getKidUserName())
+		Kid kid = kidRepository.findByUsername(request.getKidUsername())
 				.orElseThrow(() -> new KidNotFoundException("Selected kid username was not found in the database",
 						HttpStatus.NOT_FOUND));
 
@@ -76,7 +76,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 		// save new attendance
 		Attendance attendance = new Attendance(request.getDate(), request.getDayType(), kid);
 		attendanceRepository.save(attendance);
-		response.setStatus("Attendance for " + request.getKidUserName() + " was created.");
+		response.setStatus("Attendance for " + request.getKidUsername() + " was created.");
 
 		return response;
 	}
@@ -87,7 +87,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 		List<Attendance> attendances = new ArrayList<>();
 		ArrayList<Event> existingEvents = new ArrayList<>();
 
-		Kid kid = kidRepository.findByUserName(request.getKidUserName())
+		Kid kid = kidRepository.findByUsername(request.getKidUsername())
 				.orElseThrow(() -> new KidNotFoundException("Selected kid username was not found in the database",
 						HttpStatus.NOT_FOUND));
 
@@ -137,7 +137,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 			eventRepository.save(event);
 		}
 
-		response.setStatus(attendances.size() + " attendances were created for " + request.getKidUserName());
+		response.setStatus(attendances.size() + " attendances were created for " + request.getKidUsername());
 		return response;
 	}
 

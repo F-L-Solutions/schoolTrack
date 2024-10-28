@@ -19,7 +19,7 @@ public interface KidRepository extends JpaRepository<Kid, Long> {
 
 	List<Kid> findAll();
 
-	Optional<Kid> findByUserName(String username);
+	Optional<Kid> findByUsername(String username);
 
 	Optional<Kid> findBySysId(Long sysId);
 	

@@ -39,7 +39,7 @@ public class ReservationServiceImpl implements ReservationService {
 	public StatusResponseDto createReservation(ReservationCreationRequestDto request) {
 		StatusResponseDto response = new StatusResponseDto("");
 
-		Kid kid = kidRepository.findByUserName(request.getKidUserName())
+		Kid kid = kidRepository.findByUsername(request.getKidUsername())
 				.orElseThrow(() -> new KidNotFoundException("Selected kid username was not found in the database",
 						HttpStatus.NOT_FOUND));
 
@@ -62,7 +62,7 @@ public class ReservationServiceImpl implements ReservationService {
 
 		Reservation reservation = new Reservation(request.getDate(), request.getDayType(), kid);
 		reservationRepository.save(reservation);
-		response.setStatus("Reservation for " + request.getKidUserName() + " was created.");
+		response.setStatus("Reservation for " + request.getKidUsername() + " was created.");
 
 		return response;
 	}
