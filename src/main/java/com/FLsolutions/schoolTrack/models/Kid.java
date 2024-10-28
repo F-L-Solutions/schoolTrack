@@ -2,13 +2,29 @@ package com.FLsolutions.schoolTrack.models;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.CreationTimestamp;
+
+import com.FLsolutions.schoolTrack.services.Utils;
+
 @Entity
 @Table(name = "kids")
-public class Kid extends User {
+public class Kid {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.TABLE)
+	private Long sysId;
+	
+	private String firstName;
+	
+	private String lastName;
+	
+	@Column(name = "user_name", unique = true, nullable = false)
+	private String username;
+	
 	@ManyToMany(mappedBy = "kids")
 	private List<Parent> parents = new ArrayList<Parent>();
 	
@@ -22,13 +38,19 @@ public class Kid extends User {
 	private List<Attendance> attendanceList;
 	
 	private DayType dayType;
+	
+	@CreationTimestamp
+	@Column(name = "created_at", nullable = false, updatable = false)
+	private LocalDateTime createdAt;
 
 	public Kid() {
 		super();
 	}
 
 	public Kid(String firstName, String lastName, List<Parent> parents) {
-		super(firstName, lastName);
+		this.firstName= firstName;
+		this.lastName= lastName;
+		this.username = Utils.createUserName(firstName, lastName);
 		this.parents = parents;
 	}
 	
@@ -61,6 +83,60 @@ public class Kid extends User {
 	public void setParents(List<Parent> parents) {
 		this.parents = parents;
 	}
-    
 
+	public Long getSysId() {
+		return sysId;
+	}
+
+	public void setSysId(Long sysId) {
+		this.sysId = sysId;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public List<SubstituteCredit> getSubstitutes() {
+		return substitutes;
+	}
+
+	public void setSubstitutes(List<SubstituteCredit> substitutes) {
+		this.substitutes = substitutes;
+	}
+
+	public List<Attendance> getAttendanceList() {
+		return attendanceList;
+	}
+
+	public void setAttendanceList(List<Attendance> attendanceList) {
+		this.attendanceList = attendanceList;
+	}
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+	
+	public String getUsername() {
+		return username;
+	}
+	
+	public void setUsername(String username) {
+		this.username = username;
+	}
 }
