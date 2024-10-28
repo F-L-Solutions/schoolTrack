@@ -205,7 +205,7 @@ public class AttendanceControllerUnitTest {
 	}
 
 	@Test
-	void POST_create_withInvalidKidUserName_returnsError() throws Exception {
+	void POST_create_withInvalidKidUsername_returnsError() throws Exception {
 		Mockito.when(attendanceService.createAttendance(Mockito.any()))
 				.thenThrow(new KidNotFoundException("Validation Failed", HttpStatus.NOT_FOUND));
 

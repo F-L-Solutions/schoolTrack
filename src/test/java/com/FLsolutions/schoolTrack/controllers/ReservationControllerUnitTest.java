@@ -180,7 +180,7 @@ public class ReservationControllerUnitTest {
 	}
 
 	@Test
-	void POST_create_withInvalidKidUserName_returnsError() throws Exception {
+	void POST_create_withInvalidKidUsername_returnsError() throws Exception {
 		Mockito.when(reservarionService.createReservation(Mockito.any()))
 				.thenThrow(new KidNotFoundException("Validation Failed", HttpStatus.NOT_FOUND));
 

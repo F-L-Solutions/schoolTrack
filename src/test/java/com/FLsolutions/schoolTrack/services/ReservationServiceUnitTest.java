@@ -67,7 +67,7 @@ public class ReservationServiceUnitTest {
 		MockitoAnnotations.openMocks(this);
 
 		mockKid = new Kid();
-		mockKid.setUserName("TestKid");
+		mockKid.setUsername("TestKid");
 		mockKid.setSysId(3L);
 
 		mockEvent = new Event();
@@ -95,7 +95,7 @@ public class ReservationServiceUnitTest {
 	@Test
 	void createReservation_returnsStatusResponseDto() {
 		when(reservationRepository.findByKidIdAndDate(anyLong(), any())).thenReturn(Optional.empty());
-		when(kidRepository.findByUserName(anyString())).thenReturn(Optional.of(mockKid));
+		when(kidRepository.findByUsername(anyString())).thenReturn(Optional.of(mockKid));
 		when(eventRepository.findByDate(any())).thenReturn(Optional.of(mockEvent));
 
 		StatusResponseDto responseDto = reservationService.createReservation(creationRequestDto);
@@ -155,7 +155,7 @@ public class ReservationServiceUnitTest {
 		existingReservation.setSysId(6L);
 
 		when(reservationRepository.findByKidIdAndDate(anyLong(), any())).thenReturn(Optional.of(reservation1));
-		when(kidRepository.findByUserName(anyString())).thenReturn(Optional.of(mockKid));
+		when(kidRepository.findByUsername(anyString())).thenReturn(Optional.of(mockKid));
 
 		DuplicateReservationException exception = assertThrows(DuplicateReservationException.class, () -> {
 			reservationService.createReservation(creationRequestDto);
@@ -169,7 +169,7 @@ public class ReservationServiceUnitTest {
 	@Test
 	void createReservation_withAvailableSpotsOnDate_throwsGenericEventException() {
 		when(reservationRepository.findByKidIdAndDate(anyLong(), any())).thenReturn(Optional.empty());
-		when(kidRepository.findByUserName(anyString())).thenReturn(Optional.of(mockKid));
+		when(kidRepository.findByUsername(anyString())).thenReturn(Optional.of(mockKid));
 		when(eventRepository.findByDate(any())).thenReturn(Optional.of(mockEvent2));
 
 		GenericEventException exception = assertThrows(GenericEventException.class, () -> {

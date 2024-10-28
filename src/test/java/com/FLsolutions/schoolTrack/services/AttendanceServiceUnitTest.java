@@ -85,7 +85,7 @@ public class AttendanceServiceUnitTest {
 
 		kid = new Kid();
 		kid.setSysId(1L);
-		kid.setUserName("TestKid");
+		kid.setUsername("TestKid");
 
 		event = new Event();
 		event.setAvailableSpots(1);
@@ -119,7 +119,7 @@ public class AttendanceServiceUnitTest {
 
 	@Test
 	void createAttendance_returnsStatusResponseDto() {
-		when(kidRepository.findByUserName(anyString())).thenReturn(Optional.of(kid));
+		when(kidRepository.findByUsername(anyString())).thenReturn(Optional.of(kid));
 		when(attendanceRepository.findByKidIdAndDate(anyLong(), any())).thenReturn(Optional.empty());
 		when(eventRepository.findByDate(any())).thenReturn(Optional.of(event));
 
@@ -132,7 +132,7 @@ public class AttendanceServiceUnitTest {
 
 	@Test
 	void bulkCreateAttendances_returnsStatusResponseDto() {
-		when(kidRepository.findByUserName(anyString())).thenReturn(Optional.of(kid));
+		when(kidRepository.findByUsername(anyString())).thenReturn(Optional.of(kid));
 		when(attendanceRepository.findByKidIdAndDate(anyLong(), any())).thenReturn(Optional.empty());
 		when(eventRepository.findByDate(any())).thenReturn(Optional.of(event));
 
@@ -212,7 +212,7 @@ public class AttendanceServiceUnitTest {
 
 	@Test
 	void createAttendance_withNoKid_throwsKidNotFoundException() {
-		when(kidRepository.findByUserName(anyString())).thenReturn(Optional.empty());
+		when(kidRepository.findByUsername(anyString())).thenReturn(Optional.empty());
 
 		KidNotFoundException exception = assertThrows(KidNotFoundException.class, () -> {
 			attendanceService.createAttendance(singleRequestDto);
@@ -226,7 +226,7 @@ public class AttendanceServiceUnitTest {
 
 	@Test
 	void createAttendance_whenKidHasAttendanceForTheDay_throwsDuplicateAttendanceException() {
-		when(kidRepository.findByUserName(anyString())).thenReturn(Optional.of(kid));
+		when(kidRepository.findByUsername(anyString())).thenReturn(Optional.of(kid));
 		when(attendanceRepository.findByKidIdAndDate(anyLong(), any())).thenReturn(Optional.of(attendance1));
 
 		DuplicateAttendanceException exception = assertThrows(DuplicateAttendanceException.class, () -> {
@@ -240,7 +240,7 @@ public class AttendanceServiceUnitTest {
 
 	@Test
 	void createAttendance_withNoEvent_throwsGenericEventException() {
-		when(kidRepository.findByUserName(anyString())).thenReturn(Optional.of(kid));
+		when(kidRepository.findByUsername(anyString())).thenReturn(Optional.of(kid));
 		when(attendanceRepository.findByKidIdAndDate(anyLong(), any())).thenReturn(Optional.empty());
 		when(eventRepository.findByDate(any())).thenReturn(Optional.empty());
 
@@ -255,7 +255,7 @@ public class AttendanceServiceUnitTest {
 
 	@Test
 	void createAttendance_withNoAvailableSpots_throwsGenericEventException() {
-		when(kidRepository.findByUserName(anyString())).thenReturn(Optional.of(kid));
+		when(kidRepository.findByUsername(anyString())).thenReturn(Optional.of(kid));
 		when(attendanceRepository.findByKidIdAndDate(anyLong(), any())).thenReturn(Optional.empty());
 		event.setAvailableSpots(0); // No available spots
 		when(eventRepository.findByDate(any())).thenReturn(Optional.of(event));
@@ -271,7 +271,7 @@ public class AttendanceServiceUnitTest {
 
 	@Test
 	void bulkCreateAttendances_withNoKid_throwsKidNotFoundException() {
-		when(kidRepository.findByUserName(anyString())).thenReturn(Optional.empty());
+		when(kidRepository.findByUsername(anyString())).thenReturn(Optional.empty());
 
 		KidNotFoundException exception = assertThrows(KidNotFoundException.class, () -> {
 			attendanceService.bulkCreateAttendances(bulkRequestDto);
@@ -284,7 +284,7 @@ public class AttendanceServiceUnitTest {
 
 	@Test
 	void bulkCreateAttendances_whenKidHasAttendanceForTheDay_throwsDuplicateAttendanceException() {
-		when(kidRepository.findByUserName(anyString())).thenReturn(Optional.of(kid));
+		when(kidRepository.findByUsername(anyString())).thenReturn(Optional.of(kid));
 		when(attendanceRepository.findByKidIdAndDate(anyLong(), any())).thenReturn(Optional.of(attendance1));
 
 		DuplicateAttendanceException exception = assertThrows(DuplicateAttendanceException.class, () -> {
@@ -298,7 +298,7 @@ public class AttendanceServiceUnitTest {
 
 	@Test
 	void bulkCreateAttendances_withNoEvent_throwsGenericEventException() {
-		when(kidRepository.findByUserName(anyString())).thenReturn(Optional.of(kid));
+		when(kidRepository.findByUsername(anyString())).thenReturn(Optional.of(kid));
 		when(attendanceRepository.findByKidIdAndDate(anyLong(), any())).thenReturn(Optional.empty());
 		when(eventRepository.findByDate(any())).thenReturn(Optional.empty());
 
@@ -313,7 +313,7 @@ public class AttendanceServiceUnitTest {
 
 	@Test
 	void bulkCreateAttendances_withNoAvailableSpots_throwsGenericEventException() {
-		when(kidRepository.findByUserName(anyString())).thenReturn(Optional.of(kid));
+		when(kidRepository.findByUsername(anyString())).thenReturn(Optional.of(kid));
 		when(attendanceRepository.findByKidIdAndDate(anyLong(), any())).thenReturn(Optional.empty());
 		event.setAvailableSpots(0); // No available spots
 		when(eventRepository.findByDate(any())).thenReturn(Optional.of(event));

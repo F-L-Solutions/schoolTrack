@@ -20,7 +20,7 @@ public class UserModelUnitTest {
 	private String lastName;
 	private String telNumber;
 	private String email;
-	private String userName;
+	private String username;
 	private String password;
 	private MockedStatic<Utils> mockedUtils;
 
@@ -33,7 +33,7 @@ public class UserModelUnitTest {
 		lastName = "User";
 		telNumber = "1234567890";
 		email = "test.user@example.com";
-		userName = Utils.createUserName(firstName, lastName);
+		username = Utils.createUserName(firstName, lastName);
 		password = "password";
 
 		user1 = new User(firstName, lastName);
@@ -71,7 +71,7 @@ public class UserModelUnitTest {
 	void testConstructor_withBasicDetails_allFieldsAreSetCorrectly() {
 		assertEquals(firstName, user1.getFirstName());
 		assertEquals(lastName, user1.getLastName());
-		assertEquals(userName, user1.getUsername());
+		assertEquals(username, user1.getUsername());
 		assertEquals(1L, user1.getSysId());
 	}
 
@@ -80,7 +80,7 @@ public class UserModelUnitTest {
 		assertEquals(firstName, user2.getFirstName());
 		assertEquals(lastName, user2.getLastName());
 		assertEquals(email, user2.getEmail());
-		assertEquals(userName, user2.getUsername());
+		assertEquals(username, user2.getUsername());
 		assertEquals(2L, user2.getSysId());
 	}
 
@@ -90,7 +90,7 @@ public class UserModelUnitTest {
 		assertEquals(lastName, user3.getLastName());
 		assertEquals(telNumber, user3.getTelNumber());
 		assertEquals(email, user3.getEmail());
-		assertEquals(userName, user3.getUsername());
+		assertEquals(username, user3.getUsername());
 		assertEquals(3L, user3.getSysId());
 	}
 
@@ -110,8 +110,8 @@ public class UserModelUnitTest {
 		user.setEmail(email);
 		assertEquals(email, user.getEmail());
 
-		user.setUserName(userName);
-		assertEquals(userName, user.getUsername());
+		user.setUsername(username);
+		assertEquals(username, user.getUsername());
 
 		user.setPassword(password);
 		assertEquals(password, user.getPassword());

@@ -49,7 +49,7 @@ public class SubstituteCreditUnitTest {
 		MockitoAnnotations.openMocks(this);
 
 		mockKid = new Kid();
-		mockKid.setUserName("TestKid");
+		mockKid.setUsername("TestKid");
 		mockKid.setSysId(3L);
 
 		credit1 = new SubstituteCredit(mockKid);
