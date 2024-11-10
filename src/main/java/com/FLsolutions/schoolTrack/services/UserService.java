@@ -9,4 +9,8 @@ public interface UserService {
 	public UserDetailsService userDetailsService();
 	
 	public User save(User newUser);
+	
+	public void validateUniqueUsername(String username);
+
+	public void validateUniqueEmail(String email);
 }

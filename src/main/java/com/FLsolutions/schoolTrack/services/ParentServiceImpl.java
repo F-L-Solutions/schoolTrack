@@ -35,19 +35,14 @@ public class ParentServiceImpl extends UserServiceImpl implements ParentService 
 	@Override
 	public StatusResponseDto createParent(ParentCreationRequestDto requestDto) {
 		StatusResponseDto responseDto = new StatusResponseDto("");
-		String username = requestDto.getFirstName() + requestDto.getLastName();
 
-		if (parentRepository.findByEmail(requestDto.getEmail()) != null) {
-			throw new DuplicateEmailException("Email already exists", HttpStatus.CONFLICT);
-		}
-
-		if (parentRepository.findByUsername(username) != null) {
-			throw new GenericUserException("Username already exists", HttpStatus.CONFLICT);
-		}
-
+		validateUniqueEmail(requestDto.getEmail());
+        validateUniqueUsername(requestDto.getFirstName() + requestDto.getLastName());
+        
 		Parent parent = new Parent(requestDto.getFirstName(), requestDto.getLastName(), requestDto.getTelNumber(),
 				requestDto.getEmail());
 		parentRepository.save(parent);
+		
 		responseDto.setStatus("Parent " + requestDto.getFirstName() + " " + requestDto.getLastName() + " was created");
 
 		// if there are kids in the DTO, create also kids
