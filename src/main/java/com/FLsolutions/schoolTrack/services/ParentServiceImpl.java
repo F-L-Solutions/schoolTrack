@@ -18,14 +18,16 @@ import com.FLsolutions.schoolTrack.exceptions.GenericUserException;
 import com.FLsolutions.schoolTrack.models.Kid;
 import com.FLsolutions.schoolTrack.models.Parent;
 import com.FLsolutions.schoolTrack.repositories.ParentRepository;
+import com.FLsolutions.schoolTrack.repositories.UserRepository;
 
 @Service
-public class ParentServiceImpl implements ParentService {
+public class ParentServiceImpl extends UserServiceImpl implements ParentService {
 
 	private ParentRepository parentRepository;
 	private KidService kidService;
 
-	public ParentServiceImpl(ParentRepository parentRepository, KidService kidService) {
+	public ParentServiceImpl(ParentRepository parentRepository, KidService kidService, UserRepository userRepository) {
+		super(userRepository);
 		this.parentRepository = parentRepository;
 		this.kidService = kidService;
 	}
@@ -49,7 +51,7 @@ public class ParentServiceImpl implements ParentService {
 		responseDto.setStatus("Parent " + requestDto.getFirstName() + " " + requestDto.getLastName() + " was created");
 
 		// if there are kids in the DTO, create also kids
-		if (!requestDto.getKids().isEmpty()) {
+		if (requestDto.getKids() != null && !requestDto.getKids().isEmpty()) {
 			List<KidCreationRequestDto> kidDtos = requestDto.getKids();
 			StringBuilder kidNames = new StringBuilder();
 

@@ -1,5 +1,6 @@
 package com.FLsolutions.schoolTrack.dtos;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.validation.constraints.Email;
@@ -26,6 +27,7 @@ public class ParentCreationRequestDto extends UserCreationRequestDto {
 		super(firstName, lastName);
 		this.telNumber = telNumber;
 		this.email = email;
+		this.kids = new ArrayList<>();
 	}
 
 	public ParentCreationRequestDto(String firstName, String lastName, String telNumber, String email,
