@@ -50,31 +50,24 @@ public class User implements UserDetails {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.username = Utils.createUserName(firstName, lastName);
+		this.password = Utils.generatePassword();
 		this.role = Role.ROLE_USER;
 	}
 
 	public User(String firstName, String lastName, String email) {
 		this(firstName, lastName);
 		this.email = email;
-
 		this.username = Utils.createUserName(firstName, lastName);
-		// method to create safe password to be done
-		this.password = createPassword();
+		this.password = Utils.generatePassword();
 		this.role = Role.ROLE_USER;
 	}
 
 	public User(String firstName, String lastName, String telNumber, String email) {
 		this(firstName, lastName, email);
 		this.telNumber = telNumber;
+		this.username = Utils.createUserName(firstName, lastName);
+		this.password = Utils.generatePassword();
 		this.role = Role.ROLE_USER;
-	}
-
-//	public String createUserName(String firstName, String lastName) {
-//		return firstName + lastName;
-//	}
-
-	public String createPassword() {
-		return "password";
 	}
 
 	public Long getSysId() {
