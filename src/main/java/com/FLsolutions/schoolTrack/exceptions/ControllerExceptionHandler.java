@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -81,5 +82,14 @@ public class ControllerExceptionHandler {
 		ErrorResponseDto errorResponse = new ErrorResponseDto("Validation Failed, IllegalArgumentException", details,
 				HttpStatus.CONFLICT.value());
 		return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+	}
+	
+	@ExceptionHandler(AuthenticationException.class)
+	public ResponseEntity<ErrorResponseDto> handleAuthenticationException(AuthenticationException ex) {
+	    List<String> details = new ArrayList<>();
+	    details.add("Authentication failed: " + ex.getMessage());
+	    
+	    ErrorResponseDto errorResponse = new ErrorResponseDto("Authentication Failed", details, HttpStatus.UNAUTHORIZED.value());
+	    return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
 	}
 }
