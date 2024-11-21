@@ -1,11 +1,10 @@
 package com.FLsolutions.schoolTrack.services;
 
-import java.time.LocalDateTime;
-
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.FLsolutions.schoolTrack.exceptions.DuplicateEmailException;
@@ -18,9 +17,11 @@ import com.FLsolutions.schoolTrack.repositories.UserRepository;
 public class UserServiceImpl implements UserService {
 
 	private UserRepository userRepository;
+	public final PasswordEncoder passwordEncoder;
 
-	public UserServiceImpl(UserRepository userRepository) {
+	public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
 		this.userRepository = userRepository;
+		this.passwordEncoder = passwordEncoder;
 	}
 
 	@Override
@@ -38,7 +39,13 @@ public class UserServiceImpl implements UserService {
 	public User save(User newUser) {
         validateUniqueEmail(newUser.getEmail());
         validateUniqueUsername(newUser.getUsername());
-
+        String password = Utils.generatePassword();
+        
+		// !!! VISIBILITY OF PASSWORD IS TEMPORARY FOR TESTING, NEEDS TO BE REMOVED LATER IN DEVELOPMENT
+        System.out.println("User password: " + password);
+        
+        String encodedPassword = passwordEncoder.encode(password);
+        newUser.setPassword(encodedPassword);
         return userRepository.save(newUser);
 	}
 	

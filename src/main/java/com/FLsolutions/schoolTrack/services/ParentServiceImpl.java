@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.FLsolutions.schoolTrack.dtos.KidCreationRequestDto;
@@ -26,10 +27,12 @@ public class ParentServiceImpl extends UserServiceImpl implements ParentService 
 	private ParentRepository parentRepository;
 	private KidService kidService;
 
-	public ParentServiceImpl(ParentRepository parentRepository, KidService kidService, UserRepository userRepository) {
-		super(userRepository);
+	public ParentServiceImpl(ParentRepository parentRepository, KidService kidService, UserRepository userRepository,
+			PasswordEncoder passwordEncoder) {
+		super(userRepository, passwordEncoder);
 		this.parentRepository = parentRepository;
 		this.kidService = kidService;
+
 	}
 
 	@Override
@@ -37,12 +40,12 @@ public class ParentServiceImpl extends UserServiceImpl implements ParentService 
 		StatusResponseDto responseDto = new StatusResponseDto("");
 
 		validateUniqueEmail(requestDto.getEmail());
-        validateUniqueUsername(requestDto.getFirstName() + requestDto.getLastName());
-        
+		validateUniqueUsername(requestDto.getFirstName() + requestDto.getLastName());
+		
 		Parent parent = new Parent(requestDto.getFirstName(), requestDto.getLastName(), requestDto.getTelNumber(),
 				requestDto.getEmail());
-		parentRepository.save(parent);
-		
+		save(parent);
+
 		responseDto.setStatus("Parent " + requestDto.getFirstName() + " " + requestDto.getLastName() + " was created");
 
 		// if there are kids in the DTO, create also kids
