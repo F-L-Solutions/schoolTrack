@@ -19,8 +19,6 @@ import com.FLsolutions.schoolTrack.repositories.UserRepository;
 public class AuthenticationServiceImpl implements AuthenticationService {
 
 	private final UserRepository userRepository;
-	private final UserService userService;
-	private final PasswordEncoder passwordEncoder;
 	private final JwtService jwtService;
 	private final AuthenticationManager authenticationManager;
 
@@ -28,8 +26,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			PasswordEncoder passwordEncoder, JwtService jwtService, AuthenticationManager authenticationManager) {
 		super();
 		this.userRepository = userRepository;
-		this.userService = userService;
-		this.passwordEncoder = passwordEncoder;
 		this.jwtService = jwtService;
 		this.authenticationManager = authenticationManager;
 	}

@@ -6,7 +6,6 @@ import java.util.List;
 import com.FLsolutions.schoolTrack.models.AttendanceDay;
 import com.FLsolutions.schoolTrack.models.AttendanceStatus;
 import com.FLsolutions.schoolTrack.models.DayType;
-import com.FLsolutions.schoolTrack.models.Kid;
 
 public class AttendanceCreationRequestDto {
 

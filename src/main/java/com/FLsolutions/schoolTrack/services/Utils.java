@@ -1,9 +1,7 @@
 package com.FLsolutions.schoolTrack.services;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Stream;
 
 import org.passay.CharacterData;
 import org.passay.CharacterRule;

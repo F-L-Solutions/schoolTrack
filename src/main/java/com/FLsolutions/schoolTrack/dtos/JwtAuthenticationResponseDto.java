@@ -1,16 +1,18 @@
 package com.FLsolutions.schoolTrack.dtos;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class JwtAuthenticationResponseDto {
-	
-	String token;
+
+	private String token;
+
+	public JwtAuthenticationResponseDto() {
+	}
+
+	public JwtAuthenticationResponseDto(String token) {
+		this.token = token;
+	}
 
 	public String getToken() {
 		return token;

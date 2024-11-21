@@ -22,13 +22,10 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.FLsolutions.schoolTrack.dtos.AdminCreationRequestDto;
 import com.FLsolutions.schoolTrack.dtos.AdminResponseDto;
 import com.FLsolutions.schoolTrack.dtos.StatusResponseDto;
-import com.FLsolutions.schoolTrack.exceptions.GenericEventException;
 import com.FLsolutions.schoolTrack.exceptions.GenericUserException;
 import com.FLsolutions.schoolTrack.models.Admin;
 import com.FLsolutions.schoolTrack.models.Role;
-import com.FLsolutions.schoolTrack.models.User;
 import com.FLsolutions.schoolTrack.services.AdminService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @ContextConfiguration

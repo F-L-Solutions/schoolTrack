@@ -12,10 +12,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.FLsolutions.schoolTrack.services.JwtService;
 import com.FLsolutions.schoolTrack.services.UserService;
 
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.security.SignatureException;
-
 import java.io.IOException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

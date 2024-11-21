@@ -8,12 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.FLsolutions.schoolTrack.dtos.KidResponseDto;
-import com.FLsolutions.schoolTrack.models.Attendance;
-import com.FLsolutions.schoolTrack.models.AttendanceDay;
 import com.FLsolutions.schoolTrack.models.Kid;
-import com.FLsolutions.schoolTrack.models.Parent;
-
 
 public interface KidRepository extends JpaRepository<Kid, Long> {
 

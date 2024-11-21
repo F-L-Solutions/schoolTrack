@@ -10,13 +10,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.FLsolutions.schoolTrack.dtos.KidCreationRequestDto;
-import com.FLsolutions.schoolTrack.dtos.KidResponseDto;
 import com.FLsolutions.schoolTrack.dtos.ParentCreationRequestDto;
 import com.FLsolutions.schoolTrack.dtos.ParentResponseDto;
 import com.FLsolutions.schoolTrack.dtos.StatusResponseDto;
-import com.FLsolutions.schoolTrack.exceptions.DuplicateEmailException;
 import com.FLsolutions.schoolTrack.exceptions.GenericUserException;
-import com.FLsolutions.schoolTrack.models.Kid;
 import com.FLsolutions.schoolTrack.models.Parent;
 import com.FLsolutions.schoolTrack.repositories.ParentRepository;
 import com.FLsolutions.schoolTrack.repositories.UserRepository;

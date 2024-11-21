@@ -16,8 +16,6 @@ import com.FLsolutions.schoolTrack.dtos.EventResponseDto;
 import com.FLsolutions.schoolTrack.dtos.StatusResponseDto;
 import com.FLsolutions.schoolTrack.services.EventService;
 
-import jakarta.validation.Valid;
-
 @RestController
 @RequestMapping("/events")
 public class EventController {
