@@ -50,7 +50,6 @@ public class User implements UserDetails {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.username = Utils.createUserName(firstName, lastName);
-		this.password = Utils.generatePassword();
 		this.role = Role.ROLE_USER;
 	}
 
@@ -58,7 +57,6 @@ public class User implements UserDetails {
 		this(firstName, lastName);
 		this.email = email;
 		this.username = Utils.createUserName(firstName, lastName);
-		this.password = Utils.generatePassword();
 		this.role = Role.ROLE_USER;
 	}
 
@@ -66,7 +64,6 @@ public class User implements UserDetails {
 		this(firstName, lastName, email);
 		this.telNumber = telNumber;
 		this.username = Utils.createUserName(firstName, lastName);
-		this.password = Utils.generatePassword();
 		this.role = Role.ROLE_USER;
 	}
 
