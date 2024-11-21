@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.FLsolutions.schoolTrack.dtos.ErrorResponseDto;
 
+import io.jsonwebtoken.security.SignatureException;
+
+
 @RestControllerAdvice
 public class ControllerExceptionHandler {
 
@@ -79,7 +82,7 @@ public class ControllerExceptionHandler {
 		List<String> details = new ArrayList<>();
 		details.add(ex.getMessage());
 		
-		ErrorResponseDto errorResponse = new ErrorResponseDto("Validation Failed, IllegalArgumentException", details,
+		ErrorResponseDto errorResponse = new ErrorResponseDto("Validation Failed, IllegalArgumentException ", details,
 				HttpStatus.CONFLICT.value());
 		return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
 	}
@@ -92,4 +95,15 @@ public class ControllerExceptionHandler {
 	    ErrorResponseDto errorResponse = new ErrorResponseDto("Authentication Failed", details, HttpStatus.UNAUTHORIZED.value());
 	    return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
 	}
+	
+	@ExceptionHandler(SignatureException.class)
+	public ResponseEntity<ErrorResponseDto> handleSignatureException(SignatureException ex) {
+		System.out.print("SignatureException running: " + ex.getMessage());
+	    List<String> details = new ArrayList<>();
+	    details.add("Authentication failed: " + ex.getMessage());
+	    
+	    ErrorResponseDto errorResponse = new ErrorResponseDto("Authentication Failed", details, HttpStatus.UNAUTHORIZED.value());
+	    return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+	}
+	
 }
