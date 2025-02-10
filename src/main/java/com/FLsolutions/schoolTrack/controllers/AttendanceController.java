@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -38,7 +39,7 @@ public class AttendanceController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
-	@PostMapping("/{id}/cancel")
+	@PutMapping("/{id}/cancel")
 	public ResponseEntity<StatusResponseDto> cancel(@PathVariable("id") Long id) {
 		StatusResponseDto response = attendanceService.cancelAttendance(id);
 		return new ResponseEntity<>(response, HttpStatus.OK);

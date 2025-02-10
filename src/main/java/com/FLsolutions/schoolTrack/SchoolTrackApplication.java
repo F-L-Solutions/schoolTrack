@@ -19,7 +19,10 @@ public class SchoolTrackApplication {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
 				//this probably needs to be changes in the future for safety
-				registry.addMapping("/**").allowedOrigins("http://localhost:3000");
+				registry.addMapping("/**")
+				.allowedOrigins("http://localhost:3000")
+				.allowedMethods("GET", "POST", "PUT", "DELETE")
+                .allowedHeaders("*");
 			}
 		};
 	}
