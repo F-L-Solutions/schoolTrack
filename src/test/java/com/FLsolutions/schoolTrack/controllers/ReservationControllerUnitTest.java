@@ -28,6 +28,7 @@ import com.FLsolutions.schoolTrack.exceptions.DuplicateReservationException;
 import com.FLsolutions.schoolTrack.exceptions.GenericEventException;
 import com.FLsolutions.schoolTrack.exceptions.GenericReservationException;
 import com.FLsolutions.schoolTrack.exceptions.KidNotFoundException;
+import com.FLsolutions.schoolTrack.filters.JwtAuthenticationFilter;
 import com.FLsolutions.schoolTrack.models.DayType;
 import com.FLsolutions.schoolTrack.models.Kid;
 import com.FLsolutions.schoolTrack.models.Reservation;
@@ -41,6 +42,9 @@ public class ReservationControllerUnitTest {
 
 	@MockBean
 	private ReservationService reservarionService;
+	
+	@MockBean
+	private JwtAuthenticationFilter jwtAuthenticationFilter;
 
 	@Autowired
 	private MockMvc mockMvc;

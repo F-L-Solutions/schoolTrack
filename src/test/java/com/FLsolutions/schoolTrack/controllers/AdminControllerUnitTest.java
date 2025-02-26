@@ -23,6 +23,7 @@ import com.FLsolutions.schoolTrack.dtos.AdminCreationRequestDto;
 import com.FLsolutions.schoolTrack.dtos.AdminResponseDto;
 import com.FLsolutions.schoolTrack.dtos.StatusResponseDto;
 import com.FLsolutions.schoolTrack.exceptions.GenericUserException;
+import com.FLsolutions.schoolTrack.filters.JwtAuthenticationFilter;
 import com.FLsolutions.schoolTrack.models.Admin;
 import com.FLsolutions.schoolTrack.models.Role;
 import com.FLsolutions.schoolTrack.services.AdminService;
@@ -34,6 +35,9 @@ public class AdminControllerUnitTest {
 
 	@MockBean
 	private AdminService adminService;
+	
+	@MockBean
+	private JwtAuthenticationFilter jwtAuthenticationFilter;
 
 	@Autowired
 	private MockMvc mockMvc;

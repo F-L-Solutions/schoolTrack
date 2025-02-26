@@ -2,6 +2,7 @@ package com.FLsolutions.schoolTrack.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -21,6 +22,7 @@ import com.FLsolutions.schoolTrack.filters.JwtAuthenticationFilter;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@Primary
 public class SecurityConfig {
 
 	private final JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -35,6 +37,7 @@ public class SecurityConfig {
 	}
 
 	@Bean
+	@Primary
 	AuthenticationProvider authenticationProvider() {
 		DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
 		authProvider.setUserDetailsService(userService.userDetailsService());
@@ -43,11 +46,13 @@ public class SecurityConfig {
 	}
 
 	@Bean
+	@Primary
 	AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
 		return config.getAuthenticationManager();
 	}
 
 	@Bean
+	@Primary
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
 				// Disable CSRF for stateless JWT-based authentication
@@ -60,7 +65,6 @@ public class SecurityConfig {
 				.authorizeHttpRequests(authorize -> authorize
 						.requestMatchers("/auth/**").permitAll()
 						.requestMatchers(HttpMethod.POST, "/admins").hasRole("SUPER_ADMIN")
-						.requestMatchers(HttpMethod.GET, "/test/**").permitAll()
 						.anyRequest().authenticated())
 				
 				// Set custom authentication provider

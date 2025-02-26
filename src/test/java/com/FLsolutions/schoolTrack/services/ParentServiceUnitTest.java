@@ -20,11 +20,18 @@ import com.FLsolutions.schoolTrack.repositories.ParentRepository;
 import com.FLsolutions.schoolTrack.services.ParentService;
 
 @SpringBootTest(classes = SchoolTrackApplication.class)
-@TestPropertySource("classpath:application.properties")
+@TestPropertySource(properties = {"JWT_SECRET_KEY=your_test_jwt_secret_key"})
 public class ParentServiceUnitTest {
 
 	@MockBean
 	private ParentRepository parentRepository;
+	
+	@MockBean
+	private JwtService jwtService;
+	
+    @MockBean
+    private KidService kidService;
+	
 	@Autowired
 	private ParentService parentService;
 

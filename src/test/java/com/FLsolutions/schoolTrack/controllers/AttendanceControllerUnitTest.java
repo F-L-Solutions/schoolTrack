@@ -27,6 +27,7 @@ import com.FLsolutions.schoolTrack.exceptions.DuplicateAttendanceException;
 import com.FLsolutions.schoolTrack.exceptions.GenericAttendanceException;
 import com.FLsolutions.schoolTrack.exceptions.GenericEventException;
 import com.FLsolutions.schoolTrack.exceptions.KidNotFoundException;
+import com.FLsolutions.schoolTrack.filters.JwtAuthenticationFilter;
 import com.FLsolutions.schoolTrack.models.Attendance;
 import com.FLsolutions.schoolTrack.models.AttendanceDay;
 import com.FLsolutions.schoolTrack.models.AttendanceStatus;
@@ -42,6 +43,9 @@ public class AttendanceControllerUnitTest {
 
 	@MockBean
 	private AttendanceService attendanceService;
+	
+	@MockBean
+	private JwtAuthenticationFilter jwtAuthenticationFilter;
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -109,6 +113,7 @@ public class AttendanceControllerUnitTest {
 		StatusResponseDto responseDto = new StatusResponseDto("ok");
 
 		Mockito.when(attendanceService.bulkCreateAttendances(Mockito.any())).thenReturn(responseDto);
+		
 
 		mockMvc.perform(MockMvcRequestBuilders.post("/attendances/bulk-create")
 				.content(objectMapper.writeValueAsString(bulkRequestDto))

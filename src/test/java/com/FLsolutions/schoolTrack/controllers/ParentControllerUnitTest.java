@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.FLsolutions.schoolTrack.dtos.ParentResponseDto;
+import com.FLsolutions.schoolTrack.filters.JwtAuthenticationFilter;
 import com.FLsolutions.schoolTrack.models.Parent;
 import com.FLsolutions.schoolTrack.services.ParentService;
 
@@ -27,6 +28,9 @@ class ParentControllerUnitTest {
 
 	@MockBean
 	private ParentService parentService; // Mocking the service layer
+	
+	@MockBean
+	private JwtAuthenticationFilter jwtAuthenticationFilter;
 
 	@Autowired
 	private MockMvc mockMvc; // For performing HTTP requests and assertions

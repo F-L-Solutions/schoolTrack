@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.FLsolutions.schoolTrack.dtos.SubstituteCreditResponseDto;
 import com.FLsolutions.schoolTrack.exceptions.GenericEventException;
+import com.FLsolutions.schoolTrack.filters.JwtAuthenticationFilter;
 import com.FLsolutions.schoolTrack.models.Kid;
 import com.FLsolutions.schoolTrack.models.SubstituteCredit;
 import com.FLsolutions.schoolTrack.services.SubstituteCreditService;
@@ -31,6 +32,9 @@ public class SubstituteCreditControllerUnitTest {
 
 	@MockBean
 	private SubstituteCreditService creditService;
+	
+	@MockBean
+	private JwtAuthenticationFilter jwtAuthenticationFilter;
 
 	@Autowired
 	private MockMvc mockMvc;
